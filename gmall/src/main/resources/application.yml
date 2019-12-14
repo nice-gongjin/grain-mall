@@ -1,1 +1,6 @@
-
+server:
+  port: 10010
+spring:
+  redis:
+    host: localhost
+    port: 6379
