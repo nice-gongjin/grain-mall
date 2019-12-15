@@ -42,6 +42,16 @@ spring:
     password:      # 密码（默认为空）
     timeout: 6000  # 连接超时时长（毫秒）
 
+  dubbo:
+    application:
+      name: usermanage
+    registry:
+      protocol: zookeeper
+      address: 192.168.222.20:2181
+    base-package: com.grain.mall
+    protocol:
+      name: dubbo
+
   #关闭缓存，及时刷新
   thymeleaf:
     cache: true
