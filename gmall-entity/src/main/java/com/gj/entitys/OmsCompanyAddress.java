@@ -1,18 +1,22 @@
 package com.gj.entitys;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
 import lombok.Data;
 
 import java.io.Serializable;
 
 @Data
+@TableName("oms_company_address")
 public class OmsCompanyAddress implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @TableId
     private String id;
     private String  addressName;
-    private int sendStatus;
-    private int receiveStatus;
+    private Integer sendStatus;
+    private Integer receiveStatus;
     private String name;
     private String phone;
     private String province;

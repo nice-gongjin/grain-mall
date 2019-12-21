@@ -3,9 +3,11 @@ package com.grain.mall.config;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-public class MyWebMvcConfig implements WebMvcConfigurer {
+//public class MyWebMvcConfig implement WebMvcConfigurer { 2.x以上用这个类
+public class MyWebMvcConfig extends WebMvcConfigurerAdapter {
 
     // 设置CORS的跨域请求问题
     @Override

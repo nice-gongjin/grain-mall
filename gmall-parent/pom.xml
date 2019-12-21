@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.2.1.RELEASE</version>
+        <version>1.5.21.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
 
@@ -25,13 +25,13 @@
         <mybatis-plus-boot-starter.version>2.2.0</mybatis-plus-boot-starter.version>
 <!--        <mysql.version>5.1.40</mysql.version>-->
         <mysql.version>8.0.15</mysql.version>
-        <druid.version>1.1.10</druid.version>
+        <druid.version>1.1.20</druid.version>
 <!--        <commons-lang3.version>3.7</commons-lang3.version>-->
         <commons-lang3.version>3.9</commons-lang3.version>
         <hutool-all.version>4.6.2</hutool-all.version>
         <fastjson.version>1.2.58</fastjson.version>
         <dubbo-starter.version>1.0.10</dubbo-starter.version>
-        <dubbo.version>2.6.6</dubbo.version>
+        <dubbo.version>2.6.2</dubbo.version>
         <zkclient.version>0.10</zkclient.version>
         <nekohtml.version>1.9.22</nekohtml.version>
         <xml-apis.version>1.4.01</xml-apis.version>
@@ -55,10 +55,17 @@
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <guava.version>18.0</guava.version>
         <dom4j.version>1.6.1</dom4j.version>
+        <netty.version>4.1.32.Final</netty.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>io.netty</groupId>
+                <artifactId>netty-all</artifactId>
+                <version>${netty.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>dom4j</groupId>
@@ -72,13 +79,19 @@
                 <version>${guava.version}</version>
             </dependency>
 
-            <!--devtools热部署-->
             <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-devtools</artifactId>
-                <optional>true</optional> <!-- 这个需要为 true 热部署才有效 -->
-                <scope>true</scope>
+                <groupId>com.alibaba.spring</groupId>
+                <artifactId>spring-context-support</artifactId>
+                <version>1.0.2</version>
             </dependency>
+
+            <!--devtools热部署-->
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-devtools</artifactId>-->
+<!--                <optional>true</optional> &lt;!&ndash; 这个需要为 true 热部署才有效 &ndash;&gt;-->
+<!--                <scope>true</scope>-->
+<!--            </dependency>-->
             <dependency>
                 <groupId>com.aliyun.oss</groupId>
                 <artifactId>aliyun-sdk-oss</artifactId>

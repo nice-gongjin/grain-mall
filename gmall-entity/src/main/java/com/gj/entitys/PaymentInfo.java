@@ -1,44 +1,36 @@
 package com.gj.entitys;
 
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
+@TableName("payment_info")
 public class PaymentInfo implements Serializable {
 
-//    @Column
-    @TableId
+    private static final long serialVersionUID = 1L;
+
+    @TableId(type = IdType.AUTO)
     private String  id;
-
-//    @Column
     private String outTradeNo;
-
-//    @Column
     private String orderId;
-
-//    @Column
     private String alipayTradeNo;
-
-//    @Column
     private BigDecimal totalAmount;
-
-//    @Column
     private String Subject;
-
-//    @Column
     private String paymentStatus;
-
-//    @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createTime;
-
-//    @Column
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date callbackTime;
-
-//    @Column
     private String callbackContent;
 
 }

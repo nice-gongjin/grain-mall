@@ -1,0 +1,30 @@
+server:
+  port: 10017
+
+spring:
+  dubbo:
+    consumer:
+      timeout: 600000
+      check: false
+    application:
+      name: manage-web
+    registry:
+      protocol: zookeeper
+      address: zookeeper://127.0.0.1:2181
+    base-package: com.gj.manage
+
+  devtools:
+    restart:
+      enabled: true  # 设置开启热部署
+      #      additional-paths: src/main/java # 设置重启的目录，添加的目录需要restart
+      exclude: statics/**,templates/**
+    freemarker:
+      cache: false    # 页面不加载缓存，修改即时生效
+
+  output:
+    ansi:
+      enabled: always
+
+logging:
+  level:
+    root: info

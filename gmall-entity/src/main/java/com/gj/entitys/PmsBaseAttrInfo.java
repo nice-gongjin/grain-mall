@@ -1,24 +1,27 @@
 package com.gj.entitys;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
+import com.baomidou.mybatisplus.annotations.TableName;
+import com.baomidou.mybatisplus.enums.IdType;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
+@TableName("pms_base_attr_info")
 public class PmsBaseAttrInfo implements Serializable {
 
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @TableId
-//    @Column
+    private static final long serialVersionUID = 1L;
+
+    @TableId(type = IdType.AUTO)
     private String id;
-//    @Column
     private String attrName;
-//    @Column
     private String catalog3Id;
-//    @Column
     private String isEnabled;
-//    @Transient
-//    List<BaseAttrValue> attrValueList;
+
+    @TableField(exist = false)
+    private List<PmsBaseAttrValue> attrValueList;
 
 }

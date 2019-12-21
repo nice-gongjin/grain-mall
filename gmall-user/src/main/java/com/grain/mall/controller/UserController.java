@@ -17,7 +17,9 @@ public class UserController {
 
     @RequestMapping("/list")
     public List<Object> get(){
+        System.out.println("访问开始!");
         System.out.println("****** " + JSON.toJSONString(userService.getUsers()));
+        System.out.println("访问结束！");
         return userService.getUsers();
     }
 

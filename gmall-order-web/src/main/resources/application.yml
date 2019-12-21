@@ -1,13 +1,13 @@
-spring:
-  dubbo:
-    registry:
-      address: 192.168.222.20:2181
-      protocol: zookeeper
-    application:
-      name: order-web
-    base-package: com.gj.order
-    protocol:
-      name: dubbo
-    consumer:
-      check: false
-      timeout: 10000
+#spring:
+#  dubbo:
+#    registry:
+#      address: 192.168.222.20:2181
+#      protocol: zookeeper
+#    application:
+#      name: order-web
+#    base-package: com.gj.order
+#    protocol:
+#      name: dubbo
+#    consumer:
+#      check: false
+#      timeout: 10000

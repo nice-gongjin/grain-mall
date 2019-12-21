@@ -2,7 +2,6 @@ package com.grain.mall.util.sql;
 
 import com.grain.mall.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 
