@@ -68,35 +68,47 @@ export default {
   // 初始化一级类别
   created() {
     prop.getCatalog1().then(response => {
-      this.catalogList1 = response.data
-    })
+      if (response.data.code === 0) {
+        this.$message.success("获取一级分类的数据成功！");
+        this.catalogList1 = response.data.catalog1s;
+      }
+      else this.$message.error("获取一级分类的数据失败！" + response.data.msg);
+    });
   },
 
   methods: {
     // 切换二级类别
     catalog1Changed() {
       prop.getCatalog2(this.catalog1Id).then(response => {
-        this.catalog2Id = null
-        this.catalog3Id = null
-        this.catalogList2 = response.data
-      })
+        this.catalog2Id = null;
+        this.catalog3Id = null;
+        if (response.data.code === 0) {
+          this.$message.success("获取二级分类的数据成功！");
+          this.catalogList2 = response.data.catalog2s;
+        }
+        else this.$message.error("获取二级分类的数据失败！" + response.data.msg);
+      });
 
       // 清空属性列表
-      this.attrInfoList = null
+      this.attrInfoList = null;
     },
 
     // 切换三级类别
     catalog2Changed() {
       prop.getCatalog3(this.catalog2Id).then(response => {
-        this.catalog3Id = null
-        this.catalogList3 = response.data
-      })
+        this.catalog3Id = null;
+        if (response.data.code === 0) {
+          this.$message.success("获取三级分类的数据成功！");
+          this.catalogList3 = response.data.catalog3s;
+        }
+        else this.$message.error("获取三级分类的数据失败！" + response.data.msg);
+      });
     },
 
     // 显示属性列表
     catalog3Changed() {
       // 子组件向父组件传值
-      this.$emit('listenOnSelect', this.catalog3Id)
+      this.$emit('listenOnSelect', this.catalog3Id);
     }
 
   }

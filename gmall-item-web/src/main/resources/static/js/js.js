@@ -72,7 +72,7 @@ $(function(){
        //红边框
 		$(".box-attr-2 dd").click(function() {
 			$(this).addClass("redborder").siblings("dd").removeClass("redborder");
-            switchSkuId();
+			switchSkuId();
 		})
 		//加减
 		$("#jia").click(function() {

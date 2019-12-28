@@ -27,8 +27,8 @@ public class SkuinfoServiceImpl extends ServiceImpl<SkuinfoMapper, PmsSkuInfo> i
     @Autowired
     private SkuSaleAttrValueMapper skuAttrValueMapper;
 
-    @Autowired
-    private RedisTemplate<String,Object> redisTemplate;
+//    @Autowired
+//    private RedisTemplate<String,Object> redisTemplate;
 
     @Override
     public PmsSkuInfo getSkuInfo(String skuId) {

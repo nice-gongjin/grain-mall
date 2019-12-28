@@ -3,7 +3,8 @@ import store from '../store/index'
 
 // 创建axios实例
 const service = axios.create({
-  baseURL: process.env.BASE_API, // api 的 base_url
+  // baseURL: process.env.BASE_API, // api 的 base_url
+  baseURL: "http://localhost:10013",
   timeout: 20000, // 请求超时时间
   headers:{
     'Accept': 'application/json',
