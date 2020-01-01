@@ -1,5 +1,6 @@
 package com.gj.entitys;
 
+import com.baomidou.mybatisplus.annotations.TableField;
 import com.baomidou.mybatisplus.annotations.TableId;
 import com.baomidou.mybatisplus.annotations.TableName;
 import com.baomidou.mybatisplus.enums.IdType;
@@ -32,16 +33,23 @@ public class OmsCartItem implements Serializable {
     private String productSubTitle;
     private String productSkuCode;
     private String memberNickname;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createDate;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date modifyDate;
+
     private Integer deleteStatus;
     private String productCategoryId;
     private String productBrand;
     private String productSn;
     private String productAttr;
+    private String isChecked;
+
+    @TableField(exist = false)
+    private BigDecimal totalPrice;
 
 }

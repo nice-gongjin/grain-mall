@@ -17,3 +17,5 @@ gmall-order-service 订单的service服务模块 10014
 gmall-order-web 订单的web模块 10015
 gmall-cart-service 购物车的service服务模块 10020
 gmall-cart-web 购物车的web模块 10021
+gmall-search-web 搜索界面的web模块 10022
+gmall-auth-center 用户认证中心模块 10086

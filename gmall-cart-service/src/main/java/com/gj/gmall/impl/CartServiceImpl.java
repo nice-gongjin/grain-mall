@@ -6,10 +6,12 @@ import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gj.entitys.OmsCartItem;
 import com.gj.gmall.mapper.CartMapper;
+import com.gj.gmall.utils.MapSortUtil;
 import com.gj.services.CartService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 
+import java.math.BigDecimal;
 import java.util.*;
 
 @Service
@@ -40,12 +42,20 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implem
         // 将属于memberId的所有购物车数据封装在map中
         Map<String,Object> map = new HashMap<>();
         for (OmsCartItem cartItem : omsCartItems) {
+            cartItem.setTotalPrice(cartItem.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
             map.put(cartItem.getProductSkuId(), JSON.toJSONString(cartItem));
         }
         try{
+            // 添加到缓存前先删除缓存中已经存在的数据
+            Set<Object> keys = redisTemplate.opsForHash().keys("user:" + memberId + ":cart");
+            Long delete = redisTemplate.opsForHash().delete("user:" + memberId + ":cart", keys);
+            // 保存前先将map变为按key降序排序的map集合
+            Map<String, Object> sort = MapSortUtil.sortByKey(map, false);
             // 将map封装为一个String保存到缓存redis中
-            redisTemplate.opsForHash().putAll("user:" + memberId + ":cart", map);
+            if (delete > 0) redisTemplate.opsForHash().putAll("user:" + memberId + ":cart", sort);
+            else return false;
         }catch (Exception e){
+            System.out.println("****** 刷新redis缓存出错！ 位置：CartServiceImpl类中第56行输出！");
             return false;
         }
 
@@ -66,6 +76,47 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implem
         }
 
         return list;
+    }
+
+    @Override
+    public Boolean cartCheked(String userId, String skuId, String isChecked) {
+        // 根据参数从数据库中修改商品为skuId的数据
+        OmsCartItem omsCartItem = new OmsCartItem();
+        omsCartItem.setMemberId(userId);
+        omsCartItem.setProductSkuId(skuId);
+        omsCartItem.setIsChecked(isChecked);
+        Integer update = cartMapper.update(omsCartItem,
+                new EntityWrapper<OmsCartItem>().eq("memberId", userId).eq("productSkuId", skuId));
+        if (update > 0) {
+            Boolean aBoolean = flushCache(userId);
+            if (!aBoolean) {
+                // 如果同步数据到缓存失败
+                System.out.println("****** 同步数据到缓存失败！ \n 位置在：" + "CartServiceImpl类中的cartCheked方法中（91行）");
+                return false;
+            }
+            return true;
+        } else return false;
+    }
+
+    @Override
+    public Boolean cartQuantity(String userId, String skuId, String quantity) {
+        // 根据参数从数据库中修改商品为skuId的数据
+        OmsCartItem omsCartItem = new OmsCartItem();
+        omsCartItem.setMemberId(userId);
+        omsCartItem.setProductSkuId(skuId);
+        omsCartItem.setQuantity(Integer.valueOf(quantity));
+        omsCartItem.setTotalPrice(omsCartItem.getPrice().multiply(BigDecimal.valueOf(omsCartItem.getQuantity())));
+        Integer update = cartMapper.update(omsCartItem,
+                new EntityWrapper<OmsCartItem>().eq("memberId", userId).eq("productSkuId", skuId));
+        if (update > 0) {
+            Boolean aBoolean = flushCache(userId);
+            if (!aBoolean) {
+                // 如果同步数据到缓存失败
+                System.out.println("****** 同步数据到缓存失败！ \n 位置在：" + "CartServiceImpl类中的cartQuantity方法中（111行）");
+                return false;
+            }
+            return true;
+        } else return false;
     }
 
 }
