@@ -1,4 +1,4 @@
-package com.gj.gmall.utils;
+package com.gj.util;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpStatus;

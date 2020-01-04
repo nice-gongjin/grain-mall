@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.gj.entitys.OmsCartItem;
 import com.gj.entitys.PmsSkuInfo;
+import com.gj.gmall.annotation.LoginRequied;
 import com.gj.gmall.utils.CookieUtil;
 import com.gj.services.CartService;
 import com.gj.services.SkuinfoService;
@@ -55,7 +56,7 @@ public class CartController {
         omsCartItem.setProductSkuId(skuId);
         omsCartItem.setQuantity(quantity);
         // 判断是否有用户ID，有就登录状态，直接存到DB中，没有就未登录状态，存在cookie中
-        String memberId = "";
+        String memberId = (String) request.getAttribute("memberId");
         List<OmsCartItem> cartItemList = new ArrayList<>();
         // 判断用户是否登录
         if (StringUtils.isBlank(memberId)){
@@ -114,7 +115,7 @@ public class CartController {
      */
     @RequestMapping(value = "/cartList",method = RequestMethod.GET)
     public String cartList(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
-        String userId = "1";
+        String userId = (String) request.getAttribute("memberId");
         List<OmsCartItem> omsCartItems = new ArrayList<>();
         // 判断用户userId是否登录
         if (StringUtils.isBlank(userId)){
@@ -175,7 +176,7 @@ public class CartController {
     @RequestMapping(value = "/checkCart",method = RequestMethod.POST)
     public String checkCart(String isChecked, String skuId, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
         // 判断用户是否登录
-        String userId = "1";
+        String userId = (String) request.getAttribute("memberId");
         // 调用服务修改购物车中skuId商品的数据的isChecked状态
         Boolean cheked = cartService.cartCheked(userId, skuId, isChecked);
         // 封装返回的结果
@@ -204,9 +205,9 @@ public class CartController {
      * 购物车列表界面对购物车的数量的异步修改
      */
     @RequestMapping(value = "/quantityCart",method = RequestMethod.POST)
-    public String quantityCart(String skuId, String quantity, ModelMap modelMap){
+    public String quantityCart(String skuId, String quantity, HttpServletRequest request, ModelMap modelMap){
         // 判断用户是否登录
-        String userId = "1";
+        String userId = (String) request.getAttribute("memberId");
         // 调用服务修改购物车中skuId商品的数据的quantity数量
         Boolean flag = cartService.cartQuantity(userId, skuId, quantity);
         // 封装返回的结果
@@ -235,9 +236,11 @@ public class CartController {
      * 购物车列表界面对购物车的数量的异步修改
      */
     @RequestMapping(value = "/toTrade",method = RequestMethod.POST)
-    public String toTrade(String totalAmount, HttpServletRequest request, HttpServletResponse response){
+    @LoginRequied(loginSuccess = true)
+    public String toTrade(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
         // 判断用户是否登录
-        String userId = "1";
+        String userId = (String) request.getAttribute("memberId");
+        String nickname = (String) request.getAttribute("nickname");
 
         return null;
     }

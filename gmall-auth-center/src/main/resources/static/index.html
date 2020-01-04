@@ -87,9 +87,11 @@
 			var data = {username: username, password: password};
 			// 异步提交的策略
 			$.post("/auth/login", data, function (token) {
-				if (token != null){
+				if (token !== "fail"){
 					window.location.href = $("#ReturnUrl").val() + "?token=" + token;
 				}else {
+					// 这里登录验证失败 dosomething
+					alert("用户名或密码错误");
 				}
 			});
 
