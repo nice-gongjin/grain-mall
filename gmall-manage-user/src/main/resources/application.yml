@@ -22,17 +22,24 @@ spring:
 
   devtools:
     restart:
-      enabled: true  # ÉèÖÃ¿ªÆôÈÈ²¿Êğ
-#      additional-paths: src/main/java # ÉèÖÃÖØÆôµÄÄ¿Â¼£¬Ìí¼ÓµÄÄ¿Â¼ĞèÒªrestart
+      enabled: true  # ï¿½ï¿½ï¿½Ã¿ï¿½ï¿½ï¿½ï¿½È²ï¿½ï¿½ï¿½
+#      additional-paths: src/main/java # ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿Â¼ï¿½ï¿½ï¿½ï¿½Óµï¿½Ä¿Â¼ï¿½ï¿½Òªrestart
       exclude: statics/**,templates/**
     freemarker:
-      cache: false    # Ò³Ãæ²»¼ÓÔØ»º´æ£¬ĞŞ¸Ä¼´Ê±ÉúĞ§
+      cache: false    # Ò³ï¿½æ²»ï¿½ï¿½ï¿½Ø»ï¿½ï¿½æ£¬ï¿½Ş¸Ä¼ï¿½Ê±ï¿½ï¿½Ğ§
+
+  elasticsearch:
+    jest:
+      uris: http://192.168.43.254:9200
+      read-timeout: 10000
+      connection-timeout: 10000
+#      username: gongjin
 
   output:
     ansi:
       enabled: always
 
-# mybatis-plusÏà¹ØÅäÖÃ
+# mybatis-plusï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   global-config:

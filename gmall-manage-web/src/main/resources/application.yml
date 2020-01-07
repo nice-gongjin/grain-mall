@@ -15,11 +15,15 @@ spring:
 
   devtools:
     restart:
-      enabled: true  # 设置开启热部署
-      #      additional-paths: src/main/java # 设置重启的目录，添加的目录需要restart
+      enabled: true  # 锟斤拷锟矫匡拷锟斤拷锟饺诧拷锟斤拷
+      #      additional-paths: src/main/java # 锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷目录锟斤拷锟斤拷拥锟侥柯硷拷锟揭猺estart
       exclude: statics/**,templates/**
     freemarker:
-      cache: false    # 页面不加载缓存，修改即时生效
+      cache: false    # 页锟芥不锟斤拷锟截伙拷锟芥，锟睫改硷拷时锟斤拷效
+
+  thymeleaf:
+    cache: false
+    mode: LEGACYHTML5
 
   output:
     ansi:

@@ -13,6 +13,14 @@ public class SearchController {
 
     @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(String skuId, HttpServletRequest request, ModelMap modelMap){
+        System.out.println("****** skuId = " + skuId);
+
+        return "search";
+    }
+
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
+    public String test(){
+        System.out.println("****** skuId = ");
 
         return "search";
     }

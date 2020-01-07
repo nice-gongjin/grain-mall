@@ -63,12 +63,9 @@ public class AuthCenterController {
             if (StringUtils.isNotBlank(xff)) {
                 realIP = xff;
                 int index = xff.indexOf(",");
-                if (-1 != index) {
-                    xff = xff.substring(0,index);
-                }
-                System.out.println("****** xff222 = " + xff);
-//                realIP = xff.trim();
-                System.out.println("****** realIP = " + realIP);
+                if (-1 != index) xff = xff.substring(0,index);
+                System.out.println("****** xff222 = " + xff + "  ******  " + xff.trim());
+//                realIP = ;
             }else {
                 realIP = request.getRemoteAddr();
             }

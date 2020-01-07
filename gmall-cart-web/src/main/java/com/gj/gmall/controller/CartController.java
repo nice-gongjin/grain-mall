@@ -242,7 +242,7 @@ public class CartController {
         String userId = (String) request.getAttribute("memberId");
         String nickname = (String) request.getAttribute("nickname");
 
-        return null;
+        return "toTrade";
     }
 
     /**

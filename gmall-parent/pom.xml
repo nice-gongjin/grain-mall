@@ -56,6 +56,7 @@
         <guava.version>18.0</guava.version>
         <dom4j.version>1.6.1</dom4j.version>
         <netty.version>4.1.32.Final</netty.version>
+<!--        <elasticsearch.version>1.5.21</elasticsearch.version>-->
     </properties>
 
     <dependencyManagement>
@@ -246,6 +247,13 @@
 <!--                <artifactId>jedis</artifactId>-->
 <!--                <version>${jedis.version}</version>-->
 <!--            </dependency>-->
+
+            <!-- elasticsearch的java客户端 -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+<!--                <version>${elasticsearch.version}</version>-->
+            </dependency>
 
             <!-- https://mvnrepository.com/artifact/io.searchbox/jest -->
             <dependency>
