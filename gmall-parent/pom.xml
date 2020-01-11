@@ -55,7 +55,7 @@
         <qiniu.version>[7.2.0, 7.2.99]</qiniu.version>
         <guava.version>18.0</guava.version>
         <dom4j.version>1.6.1</dom4j.version>
-        <netty.version>4.1.32.Final</netty.version>
+        <netty.version>4.1.42.Final</netty.version>
 <!--        <elasticsearch.version>1.5.21</elasticsearch.version>-->
     </properties>
 
