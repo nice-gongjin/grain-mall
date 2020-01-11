@@ -46,6 +46,7 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implem
             map.put(cartItem.getProductSkuId(), JSON.toJSONString(cartItem));
         }
         try{
+            if (null == redisTemplate) return false;
             // 添加到缓存前先删除缓存中已经存在的数据
             Set<Object> keys = redisTemplate.opsForHash().keys("user:" + memberId + ":cart");
             Long delete = redisTemplate.opsForHash().delete("user:" + memberId + ":cart", keys);
@@ -65,14 +66,20 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implem
     @Override
     public List<OmsCartItem> getCartList(String userId) {
         List<OmsCartItem> list = new ArrayList<>();
-        // 从缓存redis中根据key获取value的集合，value封装的是一个String类型的Map<OmsCartItem的ProductSkuId,String类型的OmsCartItem>
-        List<Object> values = redisTemplate.opsForHash().values("user:" + userId + ":cart");
-        if (values.size() > 0){
-            for (Object value : values) {
-                // value是一条String类型的OmsCartItem
-                OmsCartItem omsCartItem = JSON.parseObject(String.valueOf(value), OmsCartItem.class);
-                list.add(omsCartItem);
+        try {
+            if (null == redisTemplate) return null;
+            // 从缓存redis中根据key获取value的集合，value封装的是一个String类型的Map<OmsCartItem的ProductSkuId,String类型的OmsCartItem>
+            List<Object> values = redisTemplate.opsForHash().values("user:" + userId + ":cart");
+            if (values.size() > 0){
+                for (Object value : values) {
+                    // value是一条String类型的OmsCartItem
+                    OmsCartItem omsCartItem = JSON.parseObject(String.valueOf(value), OmsCartItem.class);
+                    list.add(omsCartItem);
+                }
             }
+        }catch (Exception e) {
+            System.out.println("****** CartServiceImpl第80行... error = " + e.getMessage());
+            return null;
         }
 
         return list;

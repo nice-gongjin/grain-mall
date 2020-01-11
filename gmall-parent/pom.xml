@@ -40,8 +40,8 @@
         <httpclient.version>4.5.6</httpclient.version>
         <mapper-starter.version>1.2.3</mapper-starter.version>
         <jedis.version>2.9.0</jedis.version>
-        <jest.version>5.3.3</jest.version>
-        <jna.version>5.3.1</jna.version>
+<!--        <jest.version>5.3.3</jest.version>-->
+<!--        <jna.version>5.3.1</jna.version>-->
         <beanUtils.version>1.9.3</beanUtils.version>
         <ooxml.version>3.17</ooxml.version>
         <guava.version>18.0</guava.version>
@@ -163,12 +163,6 @@
             </dependency>
 
             <dependency>
-                <groupId>com.google.guava</groupId>
-                <artifactId>guava</artifactId>
-                <version>${guava.version}</version>
-            </dependency>
-
-            <dependency>
                 <groupId>com.alibaba</groupId>
                 <artifactId>fastjson</artifactId>
                 <version>${fastjson.version}</version>
@@ -249,25 +243,25 @@
 <!--            </dependency>-->
 
             <!-- elasticsearch的java客户端 -->
-            <dependency>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
+<!--            <dependency>-->
+<!--                <groupId>org.springframework.boot</groupId>-->
+<!--                <artifactId>spring-boot-starter-data-elasticsearch</artifactId>-->
 <!--                <version>${elasticsearch.version}</version>-->
-            </dependency>
+<!--            </dependency>-->
 
             <!-- https://mvnrepository.com/artifact/io.searchbox/jest -->
-            <dependency>
-                <groupId>io.searchbox</groupId>
-                <artifactId>jest</artifactId>
-                <version>${jest.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>io.searchbox</groupId>-->
+<!--                <artifactId>jest</artifactId>-->
+<!--                <version>${jest.version}</version>-->
+<!--            </dependency>-->
 
             <!-- https://mvnrepository.com/artifact/net.java.dev.jna/jna -->
-            <dependency>
-                <groupId>net.java.dev.jna</groupId>
-                <artifactId>jna</artifactId>
-                <version>${jna.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>net.java.dev.jna</groupId>-->
+<!--                <artifactId>jna</artifactId>-->
+<!--                <version>${jna.version}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>commons-beanutils</groupId>

@@ -1,5 +1,6 @@
 package com.gj.gmall.controller;
 
+import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.fastjson.JSON;
 import com.gj.entitys.UmsMember;
 import com.gj.gmall.utils.JwtUtil;
@@ -22,12 +23,12 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthCenterController {
 
-    @Autowired
+    @Reference
     UserService userService;
 
     // 验证token
     // 如果这里是从连接器AuthorityFilter类中发送过来的请求，则IP是连接器服务器的IP，故要接收传过了的currentIP
-    @RequestMapping(value = "/verify",method = RequestMethod.GET)
+    @RequestMapping(value = "/verify", method = RequestMethod.GET)
     public String verify(@PathVariable("token") String token, @PathVariable("currentIP") String IP){
         // 通过token验证用户身份
         // 从请求或者代理中获取用户的请求IP，当做JWT加密的盐值的一部分
@@ -48,7 +49,7 @@ public class AuthCenterController {
         return null;
     }
 
-    @RequestMapping(value = "/login",method = RequestMethod.POST)
+    @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(UmsMember umsMember, HttpServletRequest request){
         String token = "";
         // 调用用户服务验证用户的信息
@@ -98,7 +99,7 @@ public class AuthCenterController {
         return token;
     }
 
-    @RequestMapping(value = "/index",method = RequestMethod.GET)
+    @RequestMapping(value = "/index", method = RequestMethod.GET)
     public String index(@PathVariable("originUrl") String ReturnUrl, ModelMap modelMap){
         // 调用用户服务验证用户的信息
 

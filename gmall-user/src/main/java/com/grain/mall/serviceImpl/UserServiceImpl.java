@@ -41,6 +41,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
                 if (StringUtils.isNotBlank(userInfo)) {
                     // 若缓存中有用户的信息
                     UmsMember memberInfo = JSON.parseObject(userInfo, UmsMember.class);
+                    System.out.println("****** memberInfo333 = " + memberInfo);
                     return memberInfo;
                 }
             }
@@ -53,8 +54,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
                 UmsMember memberInfo = umsMembers.get(0);
                 String V = JSON.toJSONString(memberInfo);
                 redisTemplate.opsForValue().set("user:"+userId+":"+password+":login",V,1, TimeUnit.DAYS);
+                System.out.println("****** memberInfo444 = " + memberInfo);
                 return memberInfo;
             }
+            System.out.println("****** redisTemplate = " + redisTemplate);
         }finally {
             System.out.println("****** 错误！");
         }

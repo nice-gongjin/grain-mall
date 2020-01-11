@@ -233,19 +233,6 @@ public class CartController {
     }
 
     /**
-     * 购物车列表界面对购物车的数量的异步修改
-     */
-    @RequestMapping(value = "/toTrade",method = RequestMethod.POST)
-    @LoginRequied(loginSuccess = true)
-    public String toTrade(HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
-        // 判断用户是否登录
-        String userId = (String) request.getAttribute("memberId");
-        String nickname = (String) request.getAttribute("nickname");
-
-        return "toTrade";
-    }
-
-    /**
      * 判断购物车的cookie中是否存在skuId的商品信息
      * @return Boolean
      */

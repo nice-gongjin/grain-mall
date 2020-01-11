@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="gmall-web-util" />
+        <module name="gmall-interface" />
+        <module name="gmall-common-util" />
+        <module name="gmall-login-web" />
+        <module name="gmall-manage-user" />
+        <module name="gmall-manage-web" />
+        <module name="gmall-item-web" />
+        <module name="gmall-auth-center" />
+        <module name="gmall-cart-service" />
+        <module name="gmall-order-web" />
+        <module name="gmall-user-web" />
+        <module name="gmall-user-service" />
+        <module name="gmall-cart-web" />
+        <module name="gmall-entity" />
+        <module name="gmall-search-web" />
+        <module name="gmall-user" />
+        <module name="gmall-service-util" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="gmall-auth-center" target="1.8" />
+      <module name="gmall-cart-service" target="1.8" />
+      <module name="gmall-cart-web" target="1.8" />
+      <module name="gmall-common-util" target="1.8" />
+      <module name="gmall-entity" target="1.8" />
+      <module name="gmall-interface" target="1.8" />
+      <module name="gmall-item-web" target="1.8" />
+      <module name="gmall-login-web" target="1.8" />
+      <module name="gmall-manage-user" target="1.8" />
+      <module name="gmall-manage-web" target="1.8" />
+      <module name="gmall-order-web" target="1.8" />
+      <module name="gmall-parent" target="1.8" />
+      <module name="gmall-search-web" target="1.8" />
+      <module name="gmall-service-util" target="1.8" />
+      <module name="gmall-user" target="1.8" />
+      <module name="gmall-user-manage" target="1.8" />
+      <module name="gmall-user-service" target="1.8" />
+      <module name="gmall-user-web" target="1.8" />
+      <module name="gmall-web-util" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="gmall-auth-center" options="" />
+      <module name="gmall-cart-service" options="" />
+      <module name="gmall-cart-web" options="" />
+      <module name="gmall-common-util" options="" />
+      <module name="gmall-entity" options="" />
+      <module name="gmall-interface" options="" />
+      <module name="gmall-login-web" options="" />
+      <module name="gmall-manage-user" options="" />
+      <module name="gmall-manage-web" options="" />
+      <module name="gmall-order-web" options="" />
+      <module name="gmall-search-web" options="" />
+      <module name="gmall-service-util" options="" />
+      <module name="gmall-user" options="" />
+      <module name="gmall-user-manage" options="-parameters" />
+      <module name="gmall-user-service" options="" />
+      <module name="gmall-user-web" options="" />
+      <module name="gmall-web-util" options="" />
+    </option>
+  </component>
+</project>

@@ -3,6 +3,7 @@ package com.gj.gmall.aop;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
@@ -12,22 +13,27 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ValidatorAop {
 
-    @Around(value = "execution(public * com.gj.gmall.*Controller.*.*(..))")
-    public Object around(JoinPoint joinPoint){
+    @Around("execution(* com.gj.gmall.controller.*Controller..*(..))")
+    public Object around(ProceedingJoinPoint joinPoint){
+        Object proceed = null;
         try {
-            log.info("****** aop开始处理。。。");
+            log.debug("****** aop开始处理。。。");
             Object[] args = joinPoint.getArgs();
             if (args != null && args.length > 0){
-
+                for (Object arg : args) {
+                    log.debug("****** arg = " + arg);
+                }
             }
-            log.info("****** aop处理完成。。。");
+            proceed = joinPoint.proceed(args);
+            log.debug("****** aop处理完成。。。" + proceed);
         }catch (Throwable throwable) {
-            log.error("*** 切面拦截异常！ {}",throwable.getMessage());
+            log.error("*** 切面拦截的异常错误！ {}",throwable.getMessage());
             throw new RuntimeException(throwable);
         }finally {
-            log.info("****** aop后置通知。。。");
+            log.debug("****** aop后置通知。。。");
         }
-        return null;
+
+        return proceed;
     }
 
 }

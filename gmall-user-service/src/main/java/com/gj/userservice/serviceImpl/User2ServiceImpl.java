@@ -41,6 +41,7 @@ public class User2ServiceImpl extends ServiceImpl<User2Mapper, UmsMember> implem
                 if (StringUtils.isNotBlank(userInfo)) {
                     // 若缓存中有用户的信息
                     UmsMember memberInfo = JSON.parseObject(userInfo, UmsMember.class);
+                    System.out.println("****** memberInfo = " + memberInfo);
                     return memberInfo;
                 }
             }
@@ -53,10 +54,12 @@ public class User2ServiceImpl extends ServiceImpl<User2Mapper, UmsMember> implem
                 UmsMember memberInfo = umsMembers.get(0);
                 String V = JSON.toJSONString(memberInfo);
                 redisTemplate.opsForValue().set("user:"+userId+":"+password+":login",V,1, TimeUnit.DAYS);
+                System.out.println("****** memberInfo222 = " + memberInfo);
                 return memberInfo;
             }
+            System.out.println("****** redisTemplate = " + redisTemplate);
         }finally {
-            System.out.println("****** 错误！");
+            System.out.println("****** finally ");
         }
         return null;
     }
