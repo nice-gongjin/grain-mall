@@ -23,7 +23,7 @@ public class OmsOrderItem implements Serializable {
     private String productName;
     private String productBrand;
     private String productSn;
-    private String productPrice;
+    private BigDecimal productPrice;
     private Integer productQuantity;
     private String productSkuId;
     private String productSkuCode;

@@ -8,11 +8,14 @@ import com.gj.entitys.OmsCartItem;
 import com.gj.gmall.mapper.CartMapper;
 import com.gj.gmall.utils.MapSortUtil;
 import com.gj.services.CartService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implements CartService {
@@ -124,6 +127,23 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implem
             }
             return true;
         } else return false;
+    }
+
+    @Override
+    public Boolean addTradeCode(String userId, String tradeCode) {
+        ValueOperations<String, Object> redis = redisTemplate.opsForValue();
+        try {
+            if (StringUtils.isNotBlank(userId) && StringUtils.isNotBlank(tradeCode)) {
+                String value = (String) redis.get("trade:" + userId + ":code");
+                if (StringUtils.isBlank(value)) {
+                    redis.set("trade:" + userId + ":code", tradeCode,30, TimeUnit.MINUTES);
+                    return true;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("****** e= " + e.getMessage());
+        }
+        return false;
     }
 
 }

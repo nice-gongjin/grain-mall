@@ -9,8 +9,11 @@ import com.grain.mall.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.script.DefaultRedisScript;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +25,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
 
     @Autowired
     RedisTemplate<String, String> redisTemplate;
+    DefaultRedisScript<Long> script;
 
     @Override
     public List<Object> getUsers() {
@@ -65,13 +69,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
     }
 
     @Override
-    public Boolean addRedis(String token,String userId) {
+    public Boolean addRedis(String token, String userId) {
         try {
             if (StringUtils.isBlank(token) || null == redisTemplate) return false;
             redisTemplate.opsForValue().set("user:" + userId + ":token",token,1,TimeUnit.DAYS);
             return true;
         }catch (Exception e){
             System.out.println("****** token添加到缓存出错！ UserServiceImpl的69行。。。");
+        }
+        return false;
+    }
+
+    @Override
+    public Boolean cheackTradeCode(String userId, String tradeCode) {
+        try {
+            ValueOperations<String, String> redis = redisTemplate.opsForValue();
+            // lua脚本，对比防重删令牌
+            String lua = null;
+            if (StringUtils.isNotBlank(tradeCode)) {
+                lua = "if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('del',KEYS[1]) else return 0 end";
+                script = new DefaultRedisScript<Long>();
+                script.setResultType(Long.class);
+                script.setScriptText(lua);
+                List<String> keys = new ArrayList<>();
+                keys.add("trade:" + userId + ":code");
+                Long execute = redisTemplate.execute(script, keys, tradeCode);
+                if (null != execute && execute != 0) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }catch (Exception e) {
+            System.out.println("****** e = " + e.getMessage());
         }
         return false;
     }

@@ -82,7 +82,8 @@ public class AuthorityFilter extends HandlerInterceptorAdapter {
                     }
                 }else{
                     // 重定向到登录界面
-                    response.sendRedirect("Http://auth.gmall.com:10022/auth/index?Return=" + request.getRequestURL());
+//                    response.sendRedirect("Http://auth.gmall.com:10022/auth/index?Return=" + request.getRequestURL());
+                    response.sendRedirect("http://auth.gmall.com:10022/search/index?Return=" + request.getRequestURL());
                     return false;
                 }
             } else {

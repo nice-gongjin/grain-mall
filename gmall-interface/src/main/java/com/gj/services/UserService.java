@@ -13,4 +13,6 @@ public interface UserService extends IService<UmsMember> {
 
     Boolean addRedis(String token,String userId);
 
+    Boolean cheackTradeCode(String userId, String tradeCode);
+
 }

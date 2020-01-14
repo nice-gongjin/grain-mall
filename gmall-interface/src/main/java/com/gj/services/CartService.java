@@ -17,4 +17,6 @@ public interface CartService extends IService<OmsCartItem> {
 
     Boolean cartCheked(String userId, String skuId, String isChecked);
 
+    Boolean addTradeCode(String userId, String tradeCode);
+
 }
