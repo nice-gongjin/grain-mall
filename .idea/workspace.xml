@@ -45,11 +45,12 @@
       <change afterPath="$PROJECT_DIR$/gmall-entity/target/classes/com/gj/entitys/SearchParams.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-entity/target/classes/com/gj/entitys/UmsMember.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-entity/target/classes/com/gj/entitys/UmsMemberReceiveAddress.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gmall-interface/src/main/java/com/gj/services/User2Service.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gmall-interface/src/main/java/com/gj/services/OrderService.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/CartService.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/Caterlog2Service.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/Caterlog3Service.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/CaterlogService.class" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/OrderService.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/PmsAttrInfoService.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/PmsAttrValueService.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-interface/target/classes/com/gj/services/SearchService.class" afterDir="false" />
@@ -67,6 +68,8 @@
       <change afterPath="$PROJECT_DIR$/gmall-manage-user/.mvn/wrapper/MavenWrapperDownloader.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-manage-user/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-manage-user/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gmall-manage-user/src/main/java/com/gj/manage/impl/OrderServiceImpl.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/gmall-manage-user/src/main/java/com/gj/manage/mapper/OrderMapper.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-manage-user/src/test/java/com/gj/manage/GmallManageUserApplicationTests.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-manage-web/.mvn/wrapper/MavenWrapperDownloader.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-manage-web/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
@@ -80,7 +83,6 @@
       <change afterPath="$PROJECT_DIR$/gmall-search-web/.mvn/wrapper/maven-wrapper.jar" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-search-web/.mvn/wrapper/maven-wrapper.properties" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-search-web/src/test/java/com/gj/gmall/GmallSearchWebApplicationTests.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gmall-service-util/src/main/java/com/gj/gmall/config/RedissonConfig.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-service-util/target/classes/application.properties" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-service-util/target/classes/com/gj/gmall/config/RedisAutoConfiguration.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-service-util/target/classes/com/gj/gmall/config/RedisConfig.class" afterDir="false" />
@@ -134,7 +136,6 @@
       <change afterPath="$PROJECT_DIR$/gmall-user/target/classes/mapper/UserMappr.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-user/target/classes/mybatis-config.xml" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-user/target/test-classes/com/grain/mall/MallApplicationTests.class" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gmall-web-util/src/main/java/com/gj/gmall/aop/GlobalAdviceHandler.java" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-web-util/target/classes/META-INF/gmall-web-util.kotlin_module" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-web-util/target/classes/com/gj/gmall/annotation/LoginRequied.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-web-util/target/classes/com/gj/gmall/aop/GlobalAdviceHandler.class" afterDir="false" />
@@ -146,19 +147,8 @@
       <change afterPath="$PROJECT_DIR$/gmall-web-util/target/classes/com/gj/gmall/utils/MD5Util.class" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/gmall-web-util/target/classes/com/gj/gmall/utils/PBKDF2Util.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-cart-service/src/main/java/com/gj/gmall/impl/CartServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-cart-service/src/main/java/com/gj/gmall/impl/CartServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-entity/src/main/java/com/gj/entitys/OmsOrderItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-entity/src/main/java/com/gj/entitys/OmsOrderItem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-interface/src/main/java/com/gj/services/CartService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-interface/src/main/java/com/gj/services/CartService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-interface/src/main/java/com/gj/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-interface/src/main/java/com/gj/services/UserService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-order-web/src/main/java/com/gj/gmall/GmallOrderWebApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-order-web/src/main/java/com/gj/gmall/GmallOrderWebApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gmall-order-web/src/main/java/com/gj/gmall/controller/OrderController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-order-web/src/main/java/com/gj/gmall/controller/OrderController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-order-web/src/main/resources/static/trade.html" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-order-web/src/main/resources/static/trade.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-search-web/src/main/java/com/gj/gmall/aop/ValidatorAop.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-search-web/src/main/java/com/gj/gmall/aop/ValidatorAop.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-search-web/src/main/java/com/gj/gmall/controller/SearchController.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-search-web/src/main/java/com/gj/gmall/controller/SearchController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-user-service/src/main/java/com/gj/userservice/serviceImpl/User2ServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-user-service/src/main/java/com/gj/userservice/serviceImpl/User2ServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-user/src/main/java/com/grain/mall/serviceImpl/UserServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-user/src/main/java/com/grain/mall/serviceImpl/UserServiceImpl.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gmall-user/src/test/java/com/grain/mall/MallApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-user/src/test/java/com/grain/mall/MallApplicationTests.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gmall-web-util/src/main/java/com/gj/gmall/filter/AuthorityFilter.java" beforeDir="false" afterPath="$PROJECT_DIR$/gmall-web-util/src/main/java/com/gj/gmall/filter/AuthorityFilter.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -196,8 +186,8 @@
         <option value="Enum" />
         <option value="HTML File" />
         <option value="AnnotationType" />
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -429,6 +419,20 @@
                 <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
                 <item name="Spring Boot" type="7427dc5b:ServiceModel$ServiceGroupNode" />
               </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="Spring Boot" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="Finished" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:MySQL - grain_mall@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+              </path>
+              <path>
+                <item name="services root" type="e789fda9:ObjectUtils$Sentinel" />
+                <item name="root:MySQL - grain_mall@localhost" type="7427dc5b:ServiceModel$ServiceGroupNode" />
+                <item name="com.intellij.database.console.session.MessageBusSession@264df8ee" type="9fbbdea:ServiceModel$ServiceNode" />
+              </path>
             </expand>
             <select />
           </treeState>
@@ -471,7 +475,7 @@
       <workItem from="1578760399812" duration="8660000" />
       <workItem from="1578825237605" duration="12099000" />
       <workItem from="1579003161989" duration="3273000" />
-      <workItem from="1579012178887" duration="3983000" />
+      <workItem from="1579012178887" duration="11151000" />
     </task>
     <task id="LOCAL-00001" summary="t添加了配置文件">
       <created>1576336638729</created>
@@ -550,7 +554,14 @@
       <option name="project" value="LOCAL" />
       <updated>1578761182408</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="修改了order模块相关的一些文件">
+      <created>1579017297874</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1579017297874</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -594,21 +605,22 @@
     <MESSAGE value="添加了搜索模块的文件" />
     <MESSAGE value="修改了配置文件" />
     <MESSAGE value="修改了搜索模块的文件" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改了搜索模块的文件" />
+    <MESSAGE value="修改了order模块相关的一些文件" />
+    <option name="LAST_COMMIT_MESSAGE" value="修改了order模块相关的一些文件" />
   </component>
   <component name="WindowStateProjectService">
     <state x="174" y="0" key="#Inspections" timestamp="1578751648973">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
     <state x="174" y="0" key="#Inspections/0.0.1366.736@0.0.1366.736" timestamp="1578751648973" />
-    <state x="0" y="12" width="1366" height="717" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1578208396047">
+    <state x="0" y="12" width="1366" height="717" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1579017579817">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state x="0" y="12" width="1366" height="717" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.736@0.0.1366.736" timestamp="1578208396047" />
-    <state x="440" y="6" key="#com.intellij.ide.util.MemberChooser" timestamp="1579015394978">
+    <state x="0" y="12" width="1366" height="717" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1366.736@0.0.1366.736" timestamp="1579017579817" />
+    <state x="440" y="6" key="#com.intellij.ide.util.MemberChooser" timestamp="1579098026294">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state x="440" y="6" key="#com.intellij.ide.util.MemberChooser/0.0.1366.736@0.0.1366.736" timestamp="1579015394978" />
+    <state x="440" y="6" key="#com.intellij.ide.util.MemberChooser/0.0.1366.736@0.0.1366.736" timestamp="1579098026294" />
     <state x="69" y="274" key="#com.intellij.refactoring.move.MoveHandler.SelectRefactoringDialog" timestamp="1578799015132">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
@@ -625,10 +637,10 @@
       <screen x="0" y="0" width="1366" height="736" />
     </state>
     <state x="377" y="0" key="#xdebugger.evaluate/0.0.1366.736@0.0.1366.736" timestamp="1578489939824" />
-    <state x="0" y="0" key="CommitChangelistDialog2" timestamp="1578805081111">
+    <state x="0" y="0" key="CommitChangelistDialog2" timestamp="1579017194230">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state x="0" y="0" key="CommitChangelistDialog2/0.0.1366.736@0.0.1366.736" timestamp="1578805081111" />
+    <state x="0" y="0" key="CommitChangelistDialog2/0.0.1366.736@0.0.1366.736" timestamp="1579017194230" />
     <state width="626" height="546" key="DebuggerActiveHint" timestamp="1578929900115">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
@@ -637,38 +649,38 @@
       <screen x="0" y="0" width="1366" height="736" />
     </state>
     <state x="400" y="0" key="FileChooserDialogImpl/0.0.1366.736@0.0.1366.736" timestamp="1578669537604" />
-    <state width="1308" height="213" key="GridCell.Tab.0.bottom" timestamp="1579007943875">
+    <state width="1044" height="246" key="GridCell.Tab.0.bottom" timestamp="1579017710818">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1308" height="213" key="GridCell.Tab.0.bottom/0.0.1366.736@0.0.1366.736" timestamp="1579007943875" />
-    <state width="1308" height="213" key="GridCell.Tab.0.center" timestamp="1579007943875">
+    <state width="1044" height="246" key="GridCell.Tab.0.bottom/0.0.1366.736@0.0.1366.736" timestamp="1579017710818" />
+    <state width="1044" height="246" key="GridCell.Tab.0.center" timestamp="1579017710817">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1308" height="213" key="GridCell.Tab.0.center/0.0.1366.736@0.0.1366.736" timestamp="1579007943875" />
-    <state width="1308" height="213" key="GridCell.Tab.0.left" timestamp="1579007943875">
+    <state width="1044" height="246" key="GridCell.Tab.0.center/0.0.1366.736@0.0.1366.736" timestamp="1579017710817" />
+    <state width="1044" height="246" key="GridCell.Tab.0.left" timestamp="1579017710817">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1308" height="213" key="GridCell.Tab.0.left/0.0.1366.736@0.0.1366.736" timestamp="1579007943875" />
-    <state width="1308" height="213" key="GridCell.Tab.0.right" timestamp="1579007943875">
+    <state width="1044" height="246" key="GridCell.Tab.0.left/0.0.1366.736@0.0.1366.736" timestamp="1579017710817" />
+    <state width="1044" height="246" key="GridCell.Tab.0.right" timestamp="1579017710817">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1308" height="213" key="GridCell.Tab.0.right/0.0.1366.736@0.0.1366.736" timestamp="1579007943875" />
-    <state width="1044" height="246" key="GridCell.Tab.1.bottom" timestamp="1578929932127">
+    <state width="1044" height="246" key="GridCell.Tab.0.right/0.0.1366.736@0.0.1366.736" timestamp="1579017710817" />
+    <state width="1044" height="246" key="GridCell.Tab.1.bottom" timestamp="1579017710818">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1044" height="246" key="GridCell.Tab.1.bottom/0.0.1366.736@0.0.1366.736" timestamp="1578929932127" />
-    <state width="1044" height="246" key="GridCell.Tab.1.center" timestamp="1578929932127">
+    <state width="1044" height="246" key="GridCell.Tab.1.bottom/0.0.1366.736@0.0.1366.736" timestamp="1579017710818" />
+    <state width="1044" height="246" key="GridCell.Tab.1.center" timestamp="1579017710818">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1044" height="246" key="GridCell.Tab.1.center/0.0.1366.736@0.0.1366.736" timestamp="1578929932127" />
-    <state width="1044" height="246" key="GridCell.Tab.1.left" timestamp="1578929932127">
+    <state width="1044" height="246" key="GridCell.Tab.1.center/0.0.1366.736@0.0.1366.736" timestamp="1579017710818" />
+    <state width="1044" height="246" key="GridCell.Tab.1.left" timestamp="1579017710818">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1044" height="246" key="GridCell.Tab.1.left/0.0.1366.736@0.0.1366.736" timestamp="1578929932127" />
-    <state width="1044" height="246" key="GridCell.Tab.1.right" timestamp="1578929932127">
+    <state width="1044" height="246" key="GridCell.Tab.1.left/0.0.1366.736@0.0.1366.736" timestamp="1579017710818" />
+    <state width="1044" height="246" key="GridCell.Tab.1.right" timestamp="1579017710818">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state width="1044" height="246" key="GridCell.Tab.1.right/0.0.1366.736@0.0.1366.736" timestamp="1578929932127" />
+    <state width="1044" height="246" key="GridCell.Tab.1.right/0.0.1366.736@0.0.1366.736" timestamp="1579017710818" />
     <state width="1044" height="246" key="GridCell.Tab.2.bottom" timestamp="1578929932127">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
@@ -697,10 +709,10 @@
       <screen x="0" y="0" width="1366" height="736" />
     </state>
     <state x="52" y="0" key="SettingsEditor/0.0.1366.736@0.0.1366.736" timestamp="1578669522755" />
-    <state x="174" y="34" key="Vcs.Push.Dialog.v2" timestamp="1578761256105">
+    <state x="174" y="34" key="Vcs.Push.Dialog.v2" timestamp="1579017444925">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state x="174" y="34" key="Vcs.Push.Dialog.v2/0.0.1366.736@0.0.1366.736" timestamp="1578761256105" />
+    <state x="174" y="34" key="Vcs.Push.Dialog.v2/0.0.1366.736@0.0.1366.736" timestamp="1579017444925" />
     <state x="273" y="149" key="com.intellij.ide.util.TipDialog" timestamp="1577883028345">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
@@ -717,17 +729,17 @@
       <screen x="0" y="0" width="1366" height="736" />
     </state>
     <state x="345" y="0" key="refactoring.ChangeSignatureDialog/0.0.1366.736@0.0.1366.736" timestamp="1577713249400" />
-    <state x="245" y="0" width="874" height="734" key="search.everywhere.popup" timestamp="1579015389224">
+    <state x="245" y="0" width="874" height="734" key="search.everywhere.popup" timestamp="1579097807914">
       <screen x="0" y="0" width="1366" height="736" />
     </state>
-    <state x="245" y="0" width="874" height="734" key="search.everywhere.popup/0.0.1366.736@0.0.1366.736" timestamp="1579015389224" />
+    <state x="245" y="0" width="874" height="734" key="search.everywhere.popup/0.0.1366.736@0.0.1366.736" timestamp="1579097807914" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/gmall-order-web/src/main/java/com/gj/gmall/controller/OrderController.java</url>
-          <line>92</line>
+          <line>93</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
       </breakpoints>

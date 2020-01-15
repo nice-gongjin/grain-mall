@@ -2,13 +2,13 @@ package com.gj.gmall.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.gj.entitys.OmsCartItem;
+import com.gj.entitys.OmsOrder;
 import com.gj.entitys.OmsOrderItem;
-import com.gj.entitys.UmsMemberReceiveAddress;
 import com.gj.gmall.annotation.LoginRequied;
 import com.gj.services.CartService;
+import com.gj.services.OrderService;
 import com.gj.services.UserService;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,9 +25,10 @@ public class OrderController {
 
     @Reference
     CartService cartService;
-
     @Reference
     UserService userService;
+    @Reference
+    OrderService orderService;
 
     /**
      * 购物车列表界面对购物车的数量的异步修改
@@ -93,20 +94,36 @@ public class OrderController {
         String userId = (String) request.getAttribute("memberId");
         // 先检验订单码tradeCode是否存在
         Boolean isExist = userService.cheackTradeCode(userId,tradeCode);
+        if (!isExist) {
+            throw new RuntimeException("不能重复提交！");
+        }
         // 根据用户Id获得要购买的商品列表信息
-        // 检验价格
-        // 检验库存
-        // 将订单信息写入数据库
-        // 删除购物车对应的商品数据
-        // 重定向到支付系统，等待用户完成付款的步骤
-        try {
-            response.sendRedirect("http://order.gmall.com:10015/list.html");
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("****** responseError = " + e.getMessage());
+        List<OmsCartItem> cartLists = cartService.getCartList(userId);
+        // 循环购物车中的数据，将购物车的对象封装为订单对象，每循环一个商品必须要检验当前商品的价格和库存是否符合购买要求
+        OmsOrder omsOrder = new OmsOrder();
+        for (OmsCartItem cartList : cartLists) {
+            if ("1".equals(cartList.getIsChecked())) {
+                // 检验价格
+                Boolean cheackPrice = orderService.cheackPrice(cartList);
+                if (!cheackPrice) return "fail";
+                // 检验库存
+                Integer stock = orderService.cheackStock(cartList.getProductSkuId());
+                if (stock <= 0) return "fail";
+                // 将购物车的对象封装为订单对象
+                OmsOrderItem orderItem = new OmsOrderItem();
+                // 将订单信息写入数据库
+                // 删除购物车对应的商品数据
+                // 重定向到支付系统，等待用户完成付款的步骤
+                try {
+                    response.sendRedirect("http://order.gmall.com:10015/list.html");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    System.out.println("****** responseError = " + e.getMessage());
+                }
+            }
         }
 
-        return null;
+        return "fail";
     }
 
 }
