@@ -20,3 +20,4 @@ gmall-cart-web 购物车的web模块 10021
 gmall-search-web 搜索界面的web模块 10022
 gmall-login-web 登录界面的web模块 10008
 gmall-auth-center 用户认证中心模块 10086
+gmall-pay-center 支付中心模块 18888

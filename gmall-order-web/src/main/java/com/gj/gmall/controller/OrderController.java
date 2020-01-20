@@ -112,7 +112,17 @@ public class OrderController {
                 // 将购物车的对象封装为订单对象
                 OmsOrderItem orderItem = new OmsOrderItem();
                 // 将订单信息写入数据库
+                orderItem.setProductName(cartList.getProductName());
+                orderItem.setProductSkuId(cartList.getProductSkuId());
+                orderItem.setProductQuantity(cartList.getQuantity());
+                orderItem.setProductPrice(cartList.getPrice());
+                orderItem.setProductSn(cartList.getProductSn());
+                orderItem.setProductPic(cartList.getProductPic());
+                orderItem.setRealAmount("10");
+                orderItem.setProductCategoryId(cartList.getProductCategoryId());
                 // 删除购物车对应的商品数据
+                boolean delete = cartService.deleteById(cartList.getProductId());
+                if (!delete) return "fail";
                 // 重定向到支付系统，等待用户完成付款的步骤
                 try {
                     response.sendRedirect("http://order.gmall.com:10015/list.html");
