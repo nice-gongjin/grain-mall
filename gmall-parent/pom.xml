@@ -56,11 +56,25 @@
         <guava.version>18.0</guava.version>
         <dom4j.version>1.6.1</dom4j.version>
         <netty.version>4.1.32.Final</netty.version>
+        <xstream.version>1.4.10</xstream.version>
+        <jdom.version>1.1</jdom.version>
 <!--        <elasticsearch.version>1.5.21</elasticsearch.version>-->
     </properties>
 
     <dependencyManagement>
         <dependencies>
+
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>${xstream.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jdom</groupId>
+                <artifactId>jdom</artifactId>
+                <version>${jdom.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>io.netty</groupId>

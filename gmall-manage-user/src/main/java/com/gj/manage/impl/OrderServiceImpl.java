@@ -3,8 +3,10 @@ package com.gj.manage.impl;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gj.entitys.OmsCartItem;
+import com.gj.entitys.OmsOrder;
 import com.gj.entitys.OmsOrderItem;
 import com.gj.entitys.PmsSkuInfo;
+import com.gj.manage.mapper.OrderInfoMapper;
 import com.gj.manage.mapper.OrderMapper;
 import com.gj.manage.mapper.SkuinfoMapper;
 import com.gj.services.OrderService;
@@ -17,6 +19,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OmsOrderItem> imp
 
     @Autowired
     SkuinfoMapper skuinfoMapper;
+    OrderInfoMapper orderInfoMapper;
 
     @Override
     public Boolean cheackPrice(OmsCartItem cartItem) {
@@ -31,6 +34,13 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OmsOrderItem> imp
     public Integer cheackStock(String productSkuId) {
 
         return 0;
+    }
+
+    @Override
+    public OmsOrder getOrderInfo(String orderId) {
+        OmsOrder omsOrder = orderInfoMapper.selectById(orderId);
+
+        return omsOrder;
     }
 
 }
