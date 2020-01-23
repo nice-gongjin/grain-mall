@@ -23,7 +23,9 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.SimpleFormatter;
 
 @RestController
 @RequestMapping("/order")
@@ -124,33 +126,79 @@ public class OrderController {
             if (!isExist) {
                 throw new MyException("不能重复提交！");
             }
-            // 根据用户Id获得要购买的商品列表信息
+            // 1.根据用户Id获得要购买的商品列表信息
             List<OmsCartItem> cartLists = cartService.getCartList(userId);
-            // 循环购物车中的数据，将购物车的对象封装为订单对象，每循环一个商品必须要检验当前商品的价格和库存是否符合购买要求
+            // 2.循环购物车中的数据，将购物车的对象封装为订单对象
             OmsOrder omsOrder = new OmsOrder();
+            omsOrder.setAutoConfirmDay(7);
+            omsOrder.setConfirmStatus(0);
+            omsOrder.setCreateTime(new Date());
+            omsOrder.setDiscountAmount(null);
+            omsOrder.setMemberId(userId);
+            omsOrder.setMemberUsername((String) request.getAttribute("nickName"));
+            String orderNote = (String) requestMap.get("orderComment");
+            if (StringUtils.isNotBlank(orderNote)) omsOrder.setNote(orderNote);
+            else omsOrder.setNote("订单备注");
+            // 封装订单编号
+            String orderSn = "gmall";
+            orderSn = orderSn + System.currentTimeMillis();
+            SimpleDateFormat simpleFormatter = new SimpleDateFormat("yyyyMMddHHmmss");
+            orderSn = orderSn + simpleFormatter.format(new Date());
+            omsOrder.setOrderSn(orderSn); // 外部订单号
+            omsOrder.setOrderType(1);
+            omsOrder.setSourceType(0);
+            omsOrder.setStatus(0);
+            omsOrder.setReceiverName((String) requestMap.get("consignee"));
+            String address = (String) requestMap.get("deliveryAddress");
+            omsOrder.setReceiverDetailAddress(address);
+            if (StringUtils.isNotBlank(address) && address.contains("省")) {
+                String[] provice = address.split("省");
+                omsOrder.setReceiverCity(provice[0] + "省");
+                if (provice.length > 1 && StringUtils.isNotBlank(provice[1]) && address.contains("市")) {
+                    String[] city = provice[1].split("市");
+                    omsOrder.setReceiverCity(city[0] + "市");
+                    omsOrder.setReceiverRegion(city[1]);
+                }
+            }
+            omsOrder.setReceiverPhone("18888888888");
+            Calendar calendar = Calendar.getInstance();
+            calendar.add(Calendar.DATE, 2);
+            omsOrder.setReceiveTime(calendar.getTime());
+            // 定义订单的总金额
+            BigDecimal orderTotalPrice = new BigDecimal("0");
+            // 封装商品的列表数据
+            List<OmsOrderItem> omsOrderItems = new ArrayList<>();
+            // 每循环一个商品必须要检验当前商品的价格和库存是否符合购买要求
             for (OmsCartItem cartList : cartLists) {
                 if ("1".equals(cartList.getIsChecked())) {
-                    // 检验价格
+                    // 检验价格，正式环境应该写在SkuinfoService中，这样可以避免在OrderServiceImpl中调用SkuinfoMapper
                     Boolean cheackPrice = orderService.cheackPrice(cartList);
                     if (!cheackPrice) return result;
                     // 检验库存
                     Integer stock = orderService.cheackStock(cartList.getProductSkuId());
                     if (stock <= 0) return result;
-                    // 将购物车的对象封装为订单对象
+                    // 3.将购物车的对象封装为订单对象
                     OmsOrderItem orderItem = new OmsOrderItem();
-                    // 将订单信息写入数据库
-                    orderItem.setProductName(cartList.getProductName());
                     orderItem.setProductSkuId(cartList.getProductSkuId());
+                    orderItem.setProductName(cartList.getProductName());
                     orderItem.setProductQuantity(cartList.getQuantity());
                     orderItem.setProductPrice(cartList.getPrice());
-                    orderItem.setProductSn(cartList.getProductSn());
+                    orderItem.setOrderSn(orderSn); // 外部订单号，防止订单重复
                     orderItem.setProductPic(cartList.getProductPic());
-                    orderItem.setRealAmount("10");
+                    orderItem.setRealAmount(cartList.getTotalPrice());
+                    orderItem.setProductSkuCode("666666");
+                    orderItem.setProductId(cartList.getProductId());
+                    orderItem.setProductSn("商品skuId为" + UUID.randomUUID()); // 在仓库中的skuId
                     orderItem.setProductCategoryId(cartList.getProductCategoryId());
-                    // 删除购物车对应的商品数据
+                    orderTotalPrice = orderTotalPrice.add(cartList.getPrice());
+                    omsOrderItems.add(orderItem);
+                    // 4.将订单信息写入数据库
+                    Boolean saveOrders = orderService.saveOrders(omsOrder);
+                    if (!saveOrders) return result;
+                    // 5.删除购物车对应的商品数据
                     boolean delete = cartService.deleteById(cartList.getProductId());
                     if (!delete) return result;
-                    // 重定向到支付系统，等待用户完成付款的步骤
+                    // 6.重定向到支付系统，等待用户完成付款的步骤
                     try {
                         response.sendRedirect("http://payment.gmall.com:18888/index.html");
                     } catch (IOException e) {
@@ -159,6 +207,9 @@ public class OrderController {
                     }
                 }
             }
+            omsOrder.setPayAmount(orderTotalPrice);
+            omsOrder.setTotalAmount(orderTotalPrice);
+            omsOrder.setOmsOrderItems(omsOrderItems);
             result = "success";
         } catch (UnsupportedEncodingException e) {
             throw new MyException("参数转换错误！");

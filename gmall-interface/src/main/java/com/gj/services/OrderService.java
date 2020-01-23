@@ -15,4 +15,5 @@ public interface OrderService extends IService<OmsOrderItem> {
 
     OmsOrder getOrderInfo(String orderId);
 
+    Boolean saveOrders(OmsOrder omsOrder);
 }

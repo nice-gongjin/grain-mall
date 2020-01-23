@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gj.entitys.OmsCartItem;
+import com.gj.entitys.OmsOrderItem;
 import com.gj.gmall.mapper.CartMapper;
 import com.gj.gmall.utils.MapSortUtil;
 import com.gj.services.CartService;
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.*;
@@ -22,7 +24,6 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implem
 
     @Autowired
     CartMapper cartMapper;
-
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
 
@@ -144,6 +145,22 @@ public class CartServiceImpl extends ServiceImpl<CartMapper, OmsCartItem> implem
             System.out.println("****** e= " + e.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public void deleteCarts(OmsOrderItem omsOrderItem, String userId) {
+        Integer delete = cartMapper.delete(new EntityWrapper<OmsCartItem>()
+                .eq("productId", omsOrderItem.getProductId())
+                .eq("productSkuId", omsOrderItem.getProductSkuId())
+        );
+        if (delete > 0) {
+            if (StringUtils.isNotBlank(userId) && null != redisTemplate) {
+                Boolean hasKey = redisTemplate.hasKey("trade:" + userId + ":code");
+                if (hasKey) {
+                    redisTemplate.delete("trade:" + userId + ":code");
+                }
+            }
+        }
     }
 
 }
