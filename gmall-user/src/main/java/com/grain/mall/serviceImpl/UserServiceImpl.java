@@ -22,9 +22,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
 
     @Autowired
     UserMapper userMapper;
-
     @Autowired
     RedisTemplate<String, String> redisTemplate;
+    @Autowired
     DefaultRedisScript<Long> script;
 
     @Override
@@ -46,6 +46,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
                     // 若缓存中有用户的信息
                     UmsMember memberInfo = JSON.parseObject(userInfo, UmsMember.class);
                     System.out.println("****** memberInfo333 = " + memberInfo);
+
                     return memberInfo;
                 }
             }
@@ -59,6 +60,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
                 String V = JSON.toJSONString(memberInfo);
                 redisTemplate.opsForValue().set("user:"+userId+":"+password+":login",V,1, TimeUnit.DAYS);
                 System.out.println("****** memberInfo444 = " + memberInfo);
+
                 return memberInfo;
             }
             System.out.println("****** redisTemplate = " + redisTemplate);
@@ -71,9 +73,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
     @Override
     public Boolean addRedis(String token, String userId) {
         try {
-            if (StringUtils.isBlank(token) || null == redisTemplate) return false;
-            redisTemplate.opsForValue().set("user:" + userId + ":token",token,1,TimeUnit.DAYS);
-            return true;
+            if (StringUtils.isNotBlank(token) && null != redisTemplate) {
+                redisTemplate.opsForValue().set("user:" + userId + ":token", token, 1, TimeUnit.DAYS);
+                return true;
+            }
         }catch (Exception e){
             System.out.println("****** token添加到缓存出错！ UserServiceImpl的69行。。。");
         }
@@ -83,7 +86,6 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
     @Override
     public Boolean cheackTradeCode(String userId, String tradeCode) {
         try {
-            ValueOperations<String, String> redis = redisTemplate.opsForValue();
             // lua脚本，对比防重删令牌
             String lua = null;
             if (StringUtils.isNotBlank(tradeCode)) {
@@ -93,11 +95,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
                 script.setScriptText(lua);
                 List<String> keys = new ArrayList<>();
                 keys.add("trade:" + userId + ":code");
+                if (null == redisTemplate) return false;
                 Long execute = redisTemplate.execute(script, keys, tradeCode);
                 if (null != execute && execute != 0) {
                     return true;
-                } else {
-                    return false;
                 }
             }
         }catch (Exception e) {

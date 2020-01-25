@@ -4,12 +4,29 @@ import com.gj.gmall.consumer.RabbitConfirmCallback;
 import com.gj.gmall.consumer.RabbitFailCallback;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class TopicConfig {
+
+    @Bean
+    public ConnectionFactory connectionFactory() {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("192.168.43.254",5672);
+        // 我这里直接在构造方法传入了
+        // connectionFactory.setHost();
+        // connectionFactory.setPort();
+        connectionFactory.setUsername("gmall");
+        connectionFactory.setPassword("gmall");
+        connectionFactory.setVirtualHost("gmallhost");
+        //是否开启消息确认机制
+        connectionFactory.setPublisherConfirms(true);
+
+        return connectionFactory;
+    }
 
     @Bean
     public Queue topicOrder(){
@@ -64,7 +81,7 @@ public class TopicConfig {
 
     @Bean
     public RabbitTemplate rabbitTemplate() {
-        RabbitTemplate template = new RabbitTemplate();
+        RabbitTemplate template = new RabbitTemplate(connectionFactory());
         //开启mandatory模式（开启失败回调）
         template.setMandatory(true);
         //指定消息的发送方确认模式
@@ -77,13 +94,13 @@ public class TopicConfig {
 
     @Bean
     public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory() {
-        SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory = new SimpleRabbitListenerContainerFactory();
+        SimpleRabbitListenerContainerFactory containerFactory = new SimpleRabbitListenerContainerFactory();
         //这边设置消息确认方式由自动确认变为手动确认
-        simpleRabbitListenerContainerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
+        containerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         //设置消息预取的数量
-        simpleRabbitListenerContainerFactory.setPrefetchCount(200);
+        containerFactory.setPrefetchCount(200);
 
-        return simpleRabbitListenerContainerFactory;
+        return containerFactory;
     }
 
 }

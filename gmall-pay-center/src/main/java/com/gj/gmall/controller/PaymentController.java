@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+
 @RestController
 @RequestMapping("/pay")
 public class PaymentController {
@@ -23,8 +26,9 @@ public class PaymentController {
     @Reference
     OrderService orderService;
 
+    // 支付宝支付
     @RequestMapping(value = "/alipay", method = RequestMethod.GET)
-    public String alibabaPay(String orderId, Model model) {
+    public String alibabaPay(String orderId, HttpServletResponse response, Model model) {
         if (StringUtils.isBlank(orderId)) {
             throw new MyException("订单ID不能为空！");
         }
@@ -34,16 +38,26 @@ public class PaymentController {
             // 封装订单的属性返回给界面
             model.addAttribute("orderId", orderInfo.getId());
             model.addAttribute("totalAmount", orderInfo.getTotalAmount());
-
-            return "paymentIndex";
+            try {
+                response.sendRedirect("payment.gmall.com:18888/finish.html");
+            } catch (IOException e) {
+                throw  new MyException("重定向到支付成功界面失败！");
+            }
         }
-        return JSON.toJSONString(R.error("暂无订单信息！"));
+
+        return JSON.toJSONString(R.error("支付失败！"));
     }
 
+    // 微信支付
     @RequestMapping(value = "/wxpay", method = RequestMethod.GET)
-    public String weixinPay(@RequestParam("orderId")String  orderId, Model model) {
+    public String weixinPay(@RequestParam("orderId")String  orderId, HttpServletResponse response, Model model) {
+        try {
+            response.sendRedirect("payment.gmall.com:18888/finish.html");
+        } catch (IOException e) {
+            throw  new MyException("重定向到支付成功界面失败！");
+        }
 
-        return "wxpay";
+        return JSON.toJSONString(R.error("支付失败！"));
     }
 
 }

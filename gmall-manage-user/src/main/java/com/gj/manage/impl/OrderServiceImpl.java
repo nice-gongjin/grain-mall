@@ -4,12 +4,10 @@ import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
-import com.gj.entitys.OmsCartItem;
-import com.gj.entitys.OmsOrder;
-import com.gj.entitys.OmsOrderItem;
-import com.gj.entitys.PmsSkuInfo;
+import com.gj.entitys.*;
 import com.gj.manage.mapper.OrderInfoMapper;
 import com.gj.manage.mapper.OrderMapper;
+import com.gj.manage.mapper.ProductInfoMapper;
 import com.gj.manage.mapper.SkuinfoMapper;
 import com.gj.services.CartService;
 import com.gj.services.OrderService;
@@ -31,6 +29,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OmsOrderItem> imp
     @Autowired
     OrderInfoMapper orderInfoMapper;
     @Autowired
+    ProductInfoMapper productInfoMapper;
+    @Autowired
     RedisTemplate<String,Object> redisTemplate;
     @Reference
     CartService cartService;
@@ -50,8 +50,15 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OmsOrderItem> imp
 
     @Override
     public Integer cheackStock(String productSkuId) {
+        Integer stock = 0;
+        if (StringUtils.isNotBlank(productSkuId)) {
+            PmsProductInfo pmsProductInfo = productInfoMapper.selectById(productSkuId);
+            if (null != pmsProductInfo) {
+                stock = pmsProductInfo.getProductCount();
+            }
+        }
 
-        return 1;
+        return stock;
     }
 
     @Override

@@ -19,7 +19,8 @@ public class PmsProductInfo implements Serializable {
     private String id;
     private String productName;
     private String description;
-    private  String catalog3Id;
+    private String catalog3Id;
+    private Integer productCount;
 
     @TableField(exist = false)
     private List<PmsProductSaleAttr> pmsProductSaleAttrList;
