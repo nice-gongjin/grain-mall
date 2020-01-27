@@ -7,8 +7,13 @@ import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFacto
 import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @Configuration
 public class TopicConfig {
@@ -29,6 +34,32 @@ public class TopicConfig {
     }
 
     @Bean
+//    @Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) //必须是prototype类型
+    public RabbitTemplate rabbitTemplate() {
+        RabbitTemplate template = new RabbitTemplate(connectionFactory());
+        //开启mandatory模式（开启失败回调）
+        template.setMandatory(true);
+        /**
+         * 如果消息没有到exchange,则confirm回调,ack=false
+         * 如果消息到达exchange,则confirm回调,ack=true
+         * exchange到queue成功,则不回调return
+         * exchange到queue失败,则回调return(需设置mandatory=true,否则不回回调,消息就丢了)
+         */
+        //指定消息的发送方确认模式
+        template.setConfirmCallback(new RabbitConfirmCallback());
+        //指定失败回调接口的实现类
+        template.setReturnCallback(new RabbitFailCallback());
+
+        return template;
+    }
+
+    // 发布订阅的主题交换机
+    @Bean
+    TopicExchange topicExchange(){
+        return new TopicExchange("topicExchange", true, false);
+    }
+
+    @Bean
     public Queue topicOrder(){
         return new Queue("topic.order",true);
     }
@@ -45,12 +76,22 @@ public class TopicConfig {
 
     @Bean
     public Queue topicMessage(){
-        return new Queue("topic.msg",true);
+        return new Queue("topic.error",true);
     }
 
+    // 死信队列
     @Bean
-    TopicExchange topicExchange(){
-        return new TopicExchange("topicExchange");
+    public Queue deadLetterQueue() {
+        Map<String, Object> map = new HashMap<>();
+        // 设置消息的过期时间 单位毫秒
+        map.put("x-message-ttl", 30 * 60 * 1000);
+        // 设置附带的死信交换机
+        map.put("x-dead-letter-exchange", "topicExchange");
+        // 指定重定向的路由键，消息作废之后可以决定需不需要更改他的路由建键，如果需要键，就在这里指定
+        map.put("x-dead-letter-routing-key", "topic.msg");
+        Queue queue = new Queue("topic.dead.queue", true, false, false, map);
+
+        return queue;
     }
 
     /**
@@ -76,25 +117,18 @@ public class TopicConfig {
 
     @Bean
     public Binding bindingMessage(){
-        return BindingBuilder.bind(topicMessage()).to(topicExchange()).with("topic.#");
+        return BindingBuilder.bind(topicMessage()).to(topicExchange()).with("topic.error.*");
     }
 
     @Bean
-    public RabbitTemplate rabbitTemplate() {
-        RabbitTemplate template = new RabbitTemplate(connectionFactory());
-        //开启mandatory模式（开启失败回调）
-        template.setMandatory(true);
-        //指定消息的发送方确认模式
-        template.setConfirmCallback(new RabbitConfirmCallback());
-        //指定失败回调接口的实现类
-        template.setReturnCallback(new RabbitFailCallback());
-
-        return template;
+    public Binding bindingDeadQueue() {
+        return BindingBuilder.bind(deadLetterQueue()).to(topicExchange()).with("topic.dead.#");
     }
 
     @Bean
     public SimpleRabbitListenerContainerFactory simpleRabbitListenerContainerFactory() {
         SimpleRabbitListenerContainerFactory containerFactory = new SimpleRabbitListenerContainerFactory();
+        containerFactory.setConnectionFactory(connectionFactory());
         //这边设置消息确认方式由自动确认变为手动确认
         containerFactory.setAcknowledgeMode(AcknowledgeMode.MANUAL);
         //设置消息预取的数量

@@ -33,7 +33,7 @@ public class WeixinAccessTokenTask {
     private static final String APPID = WechatConfig.APPID;
     private static final String APPSECRET = WechatConfig.APPSECRET;
 
-    @Scheduled(initialDelay = 6 * 1000, fixedDelay = 24 * 60 * 60 * 1000 )
+//    @Scheduled(initialDelay = 6 * 1000, fixedDelay = 24 * 60 * 60 * 1000 )
     public void orderStatus() {
         //调用推送消息的业务类处理请求
 //        weixinService.pushMessge();
@@ -45,7 +45,7 @@ public class WeixinAccessTokenTask {
      * access_token 失效
      * 延迟一秒执行
      */
-    @Scheduled(initialDelay = 10 * 1000, fixedDelay = 7000*1000 )
+//    @Scheduled(initialDelay = 10 * 1000, fixedDelay = 7000*1000 )
     public void getWeixinAccessToken(){
         try {
             String token = null;

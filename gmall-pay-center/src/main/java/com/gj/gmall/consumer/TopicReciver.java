@@ -1,35 +1,54 @@
 package com.gj.gmall.consumer;
 
+import com.gj.gmall.util.myException.MyException;
 import com.rabbitmq.client.Channel;
 import org.springframework.amqp.core.Message;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @Component
 public class TopicReciver {
 
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     @RabbitListener(queues = "topic.order", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void orderReceiver(String message){
+    public void orderReceiver(Message message, Channel channel){
         System.out.println("topic.order -- Receiver: " + message);
     }
 
     @RabbitListener(queues = "topic.reorder", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void reorderReceiver(String message){
+    public void reorderReceiver(Message message, Channel channel){
         System.out.println("topic.reorder -- Receiver: " + message);
     }
 
     @RabbitListener(queues = "topic.stock", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void stockReceiver(String message){
+    public void stockReceiver(Message message, Channel channel){
         System.out.println("topic.stock -- Receiver: " + message);
     }
 
-    @RabbitListener(queues = "topic.msg", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void msgReceiver(String message){
+    @RabbitListener(queues = "topic.error", containerFactory = "simpleRabbitListenerContainerFactory")
+    public void msgReceiver(Message message, Channel channel){
         System.out.println("topic.msg -- Receiver: " + message);
+        System.out.println("进行死信消息的转发： " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
     }
 
-    @RabbitListener(queues = "topic.error.msg", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void getMessage(Message message, Channel channel) throws Exception {
+    @RabbitListener(queues = "topic.dead.queue")
+    @RabbitHandler
+    public void deadReceiver(Message message, Channel channel){
+        System.out.println("延迟时间到，deadQueue开始执行: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        System.out.println("topic.dead.queue -- Receiver: " + message);
+    }
+
+    // 示列方法: 处理业务时参照此方法
+    private void getMessage(Message message, Channel channel) throws Exception {
         System.out.println(new String(message.getBody(),"UTF-8"));
         System.out.println(message.getBody());
         //这里我们调用了一个下单方法  如果下单成功了 那么这条消息就可以确认被消费了

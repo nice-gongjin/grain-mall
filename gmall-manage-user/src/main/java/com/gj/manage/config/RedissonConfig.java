@@ -10,17 +10,14 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RedissonConfig {
 
-    @Value("${spring.redis.host:0}")
-    private String host;
-
-    @Value("${spring.redis.port:6379}")
-    private String port;
-
     @Bean
-    public RedissonClient redissonClient(){
+    public RedissonClient redissonClient() throws Exception{
+        RedissonClient redisson = null;
         Config config = new Config();
-        config.useSingleServer().setAddress("redis://"+host+":"+port);
-        RedissonClient redisson = Redisson.create(config);
+        config.useSingleServer().setAddress("redis://192.168.43.254:6379").setConnectTimeout(30000).setTimeout(30000);
+        redisson = Redisson.create(config);
+        //System.out.println("初始化RedissonClient: " + redisson.getConfig().toJSON().toString());
+
         return redisson;
     }
 

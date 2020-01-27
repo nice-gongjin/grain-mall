@@ -2,13 +2,12 @@ package com.gj.manage.impl;
 
 import com.alibaba.dubbo.config.annotation.Reference;
 import com.alibaba.dubbo.config.annotation.Service;
-import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gj.entitys.*;
 import com.gj.manage.mapper.OrderInfoMapper;
 import com.gj.manage.mapper.OrderMapper;
-import com.gj.manage.mapper.ProductInfoMapper;
 import com.gj.manage.mapper.SkuinfoMapper;
+import com.gj.manage.mapper.WmsWareSkuMapper;
 import com.gj.services.CartService;
 import com.gj.services.OrderService;
 import org.apache.commons.lang3.StringUtils;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -29,7 +27,7 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OmsOrderItem> imp
     @Autowired
     OrderInfoMapper orderInfoMapper;
     @Autowired
-    ProductInfoMapper productInfoMapper;
+    WmsWareSkuMapper wmsWareSkuMapper;
     @Autowired
     RedisTemplate<String,Object> redisTemplate;
     @Reference
@@ -52,9 +50,12 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OmsOrderItem> imp
     public Integer cheackStock(String productSkuId) {
         Integer stock = 0;
         if (StringUtils.isNotBlank(productSkuId)) {
-            PmsProductInfo pmsProductInfo = productInfoMapper.selectById(productSkuId);
-            if (null != pmsProductInfo) {
-                stock = pmsProductInfo.getProductCount();
+            WmsWareSku wmsWareSku = new WmsWareSku();
+            wmsWareSku.setSkuId(productSkuId);
+            WmsWareSku selectOne = wmsWareSkuMapper.selectOne(wmsWareSku);
+            if (null != selectOne) {
+                // 返回库存的数量
+                stock = selectOne.getStock();
             }
         }
 
@@ -63,9 +64,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderMapper, OmsOrderItem> imp
 
     @Override
     public OmsOrder getOrderInfo(String orderId) {
-        OmsOrder omsOrder = orderInfoMapper.selectById(orderId);
-
-        return omsOrder;
+        // 根据订单的ID返回订单信息
+        return orderInfoMapper.selectById(orderId);
     }
 
     @Override
