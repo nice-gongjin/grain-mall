@@ -1,31 +1,28 @@
-package com.grain.mall.serviceImpl;
+package com.gj.userservice.serviceImpl;
 
+import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.service.impl.ServiceImpl;
 import com.gj.entitys.UmsMember;
 import com.gj.services.UserService;
-import com.grain.mall.mapper.UserMapper;
+import com.gj.userservice.mapper.UserMapper;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
-import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-@Service("UserService")
+@Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implements UserService {
 
     @Autowired
-    UserMapper userMapper;
+    private UserMapper userMapper;
     @Autowired
-    RedisTemplate<String, String> redisTemplate;
-    @Autowired
-    DefaultRedisScript<Long> script;
+    private RedisTemplate<String, String> redisTemplate;
 
     @Override
     public List<Object> getUsers() {
@@ -35,12 +32,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
     @Override
     public UmsMember login(UmsMember umsMember) {
         try {
-            // 从缓存中验证用户（ 缓存中用户的信息： K=user:password:login，V=UmsMember ）
+            // 从缓存中验证用户（ 缓存中用户的信息： K=user:userId:password:login，V=UmsMember ）
             if (null != redisTemplate){
                 // redis连接成功
                 // 获取用户名和密码
-                String password = umsMember.getPassword();
                 String userId = umsMember.getId();
+                String password = umsMember.getPassword();
                 String userInfo = redisTemplate.opsForValue().get("user:" + userId + ":" + password + ":login");
                 if (StringUtils.isNotBlank(userInfo)) {
                     // 若缓存中有用户的信息
@@ -51,7 +48,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
                 }
             }
             // redis连接失败或者缓存中没有用户的信息，调用数据库
-            List<UmsMember> umsMembers = userMapper.selectList(new EntityWrapper<UmsMember>());
+            List<UmsMember> umsMembers = userMapper.selectList(new EntityWrapper<UmsMember>()
+                    .eq("username", umsMember.getUsername()).eq("password", umsMember.getPassword())
+            );
+            System.out.println("****** umsMembers: " + umsMembers);
             if (null != umsMembers) {
                 // 若数据库有该用户则更新到缓存中
                 String password = umsMembers.get(0).getPassword();
@@ -65,7 +65,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
             }
             System.out.println("****** redisTemplate = " + redisTemplate);
         }finally {
-            System.out.println("****** 错误！");
+            System.out.println("****** 执行完成！");
         }
         return null;
     }
@@ -89,8 +89,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
             // lua脚本，对比防重删令牌
             String lua = null;
             if (StringUtils.isNotBlank(tradeCode)) {
+                DefaultRedisScript<Long> script = new DefaultRedisScript<>();
                 lua = "if redis.call('get',KEYS[1]) == ARGV[1] then return redis.call('del',KEYS[1]) else return 0 end";
-                script = new DefaultRedisScript<Long>();
                 script.setResultType(Long.class);
                 script.setScriptText(lua);
                 List<String> keys = new ArrayList<>();

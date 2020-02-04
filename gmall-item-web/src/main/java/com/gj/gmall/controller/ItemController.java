@@ -18,7 +18,7 @@ public class ItemController {
 //    @Reference
 //    private SkuinfoService skuinfoService;
 //
-//    @RequestMapping(value = "/{skuId}.html",method = RequestMethod.GET)
+//    @RequestMapping(value = "/{skuId}.html", method = RequestMethod.GET)
 //    public String index(@PathVariable("skuId") String skuId, Model model){
 //        System.out.println("****** skuId = " + skuId);
 //        PmsSkuInfo skuInfo = skuinfoService.getSkuInfo(skuId);
@@ -27,7 +27,7 @@ public class ItemController {
 //        return "item";
 //    }
 
-    @RequestMapping("/test")
+    @RequestMapping(value = "/test", method = RequestMethod.GET)
     public String test(HttpServletRequest request){
         System.out.println("当前线程名称" + Thread.currentThread().getName() + " IP: " + request.getSession().toString());
         return "success";

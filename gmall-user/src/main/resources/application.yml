@@ -35,6 +35,19 @@ spring:
       max-file-size: 10MB
       max-request-size: 100MB
 
+  dubbo:
+    application:
+      name: user-consumer
+    registry:
+      protocol: zookeeper
+      address: zookeeper://127.0.0.1:2181
+    base-package: com.gj.gmall
+    protocol:
+      name: dubbo
+    consumer:
+      check: false
+      timeout: 600000
+
   redis:
     database: 0
     host: 192.168.43.254

@@ -20,31 +20,98 @@ public class TopicReciver {
     RabbitTemplate rabbitTemplate;
 
     @RabbitListener(queues = "topic.order", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void orderReceiver(Message message, Channel channel){
+    public void orderReceiver(Message message, Channel channel) throws IOException {
         System.out.println("topic.order -- Receiver: " + message);
+        System.out.println("当前时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        if (null != message && null != message.getBody() && 0 != message.getBody().length) {
+            try {
+                /**
+                 * 默认情况下,如果没有配置手动ACK, 那么Spring Data AMQP 会在消息消费完毕后自动帮我们去ACK
+                 * 存在问题：如果报错了,消息不会丢失,但是会无限循环消费,一直报错,如果开启了错误日志很容易就吧磁盘空间耗完
+                 * 解决方案：手动ACK,或者try-catch 然后在 catch 里面将错误的消息转移到其它的系列中去
+                 */
+                //通知 MQ 消息已被接收,可以ACK(从队列中删除)了
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                /**
+                 * basicRecover方法是进行补发操作，其中的参数如果为true是把消息退回到queue但是有可能被其它的consumer(集群)接收到，
+                 * 设置为false是只补发给当前的consumer
+                 */
+                channel.basicRecover(false);
+            }
+        }
     }
 
     @RabbitListener(queues = "topic.reorder", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void reorderReceiver(Message message, Channel channel){
+    public void reorderReceiver(Message message, Channel channel) throws IOException {
         System.out.println("topic.reorder -- Receiver: " + message);
+        System.out.println("当前时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        if (null != message && null != message.getBody() && 0 != message.getBody().length) {
+            try {
+                /**
+                 * 默认情况下,如果没有配置手动ACK, 那么Spring Data AMQP 会在消息消费完毕后自动帮我们去ACK
+                 * 存在问题：如果报错了,消息不会丢失,但是会无限循环消费,一直报错,如果开启了错误日志很容易就吧磁盘空间耗完
+                 * 解决方案：手动ACK,或者try-catch 然后在 catch 里面将错误的消息转移到其它的系列中去
+                 */
+                //通知 MQ 消息已被接收,可以ACK(从队列中删除)了
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                /**
+                 * basicRecover方法是进行补发操作，其中的参数如果为true是把消息退回到queue但是有可能被其它的consumer(集群)接收到，
+                 * 设置为false是只补发给当前的consumer
+                 */
+                channel.basicRecover(false);
+            }
+        }
     }
 
     @RabbitListener(queues = "topic.stock", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void stockReceiver(Message message, Channel channel){
+    public void stockReceiver(Message message, Channel channel) throws IOException {
         System.out.println("topic.stock -- Receiver: " + message);
+        System.out.println("当前时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        if (null != message && null != message.getBody() && 0 != message.getBody().length) {
+            try {
+                /**
+                 * 默认情况下,如果没有配置手动ACK, 那么Spring Data AMQP 会在消息消费完毕后自动帮我们去ACK
+                 * 存在问题：如果报错了,消息不会丢失,但是会无限循环消费,一直报错,如果开启了错误日志很容易就吧磁盘空间耗完
+                 * 解决方案：手动ACK,或者try-catch 然后在 catch 里面将错误的消息转移到其它的系列中去
+                 */
+                //通知 MQ 消息已被接收,可以ACK(从队列中删除)了
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                /**
+                 * basicRecover方法是进行补发操作，其中的参数如果为true是把消息退回到queue但是有可能被其它的consumer(集群)接收到，
+                 * 设置为false是只补发给当前的consumer
+                 */
+                channel.basicRecover(false);
+            }
+        }
     }
 
     @RabbitListener(queues = "topic.error", containerFactory = "simpleRabbitListenerContainerFactory")
-    public void msgReceiver(Message message, Channel channel){
+    public void msgReceiver(Message message, Channel channel) throws IOException {
         System.out.println("topic.msg -- Receiver: " + message);
         System.out.println("进行死信消息的转发： " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-    }
-
-    @RabbitListener(queues = "topic.dead.queue")
-    @RabbitHandler
-    public void deadReceiver(Message message, Channel channel){
-        System.out.println("延迟时间到，deadQueue开始执行: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
-        System.out.println("topic.dead.queue -- Receiver: " + message);
+        System.out.println("当前时间: " + new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+        if (null != message && null != message.getBody() && 0 != message.getBody().length) {
+            try {
+                /**
+                 * 默认情况下,如果没有配置手动ACK, 那么Spring Data AMQP 会在消息消费完毕后自动帮我们去ACK
+                 * 存在问题：如果报错了,消息不会丢失,但是会无限循环消费,一直报错,如果开启了错误日志很容易就吧磁盘空间耗完
+                 * 解决方案：手动ACK,或者try-catch 然后在 catch 里面将错误的消息转移到其它的系列中去
+                 */
+                //通知 MQ 消息已被接收,可以ACK(从队列中删除)了
+                channel.basicAck(message.getMessageProperties().getDeliveryTag(), false);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+                //当然 如果这个订单处理失败了, 我们也需要告诉rabbitmq 告诉他这条消息处理失败了 可以退回 也可以遗弃
+                //前两个参数 和上面的意义一样， 最后一个参数 就是这条消息是返回到原队列 还是这条消息作废 就是不退回了。
+                channel.basicNack(message.getMessageProperties().getDeliveryTag(), false, true);
+            }
+        }
     }
 
     // 示列方法: 处理业务时参照此方法

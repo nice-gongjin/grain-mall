@@ -79,16 +79,16 @@ public class TopicConfig {
         return new Queue("topic.error",true);
     }
 
-    // 死信队列
+    // 死信队列，切记死信队列不能有消费者，不然消息过期后转发不了
     @Bean
     public Queue deadLetterQueue() {
         Map<String, Object> map = new HashMap<>();
         // 设置消息的过期时间 单位毫秒
-        map.put("x-message-ttl", 30 * 60 * 1000);
+        //map.put("x-message-ttl", 5 * 1000);
         // 设置附带的死信交换机
         map.put("x-dead-letter-exchange", "topicExchange");
-        // 指定重定向的路由键，消息作废之后可以决定需不需要更改他的路由建键，如果需要键，就在这里指定
-        map.put("x-dead-letter-routing-key", "topic.msg");
+        // 指定重定向的路由键，消息作废之后可以决定需不需要更改他的路由键，如果需要键，就在这里指定
+        map.put("x-dead-letter-routing-key", "topic.error.msg");
         Queue queue = new Queue("topic.dead.queue", true, false, false, map);
 
         return queue;

@@ -1,14 +1,11 @@
 package com.grain.mall.util.sql;
 
-import com.grain.mall.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 
 //@Component
 public class MapperUtil {
-    @Autowired
-    private UserMapper userMapper;
 
     private static MapperUtil mapperUtil;
 
@@ -21,8 +18,8 @@ public class MapperUtil {
         return mapperUtil;
     }
 
-    public UserMapper getUserMapper() {
-        return this.userMapper;
-    }
+//    public UserMapper getUserMapper() {
+//        return this.userMapper;
+//    }
 
 }
