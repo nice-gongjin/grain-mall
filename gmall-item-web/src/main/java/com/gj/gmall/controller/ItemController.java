@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author gj
+ *  这里主要根据某个商品的id去查询这个商品的商品属性及图片等信息给前端；以及处理界面的一些事件的处理
+ */
 @RestController
 @RequestMapping("/item")
 public class ItemController {

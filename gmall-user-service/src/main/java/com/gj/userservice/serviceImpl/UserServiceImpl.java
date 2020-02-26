@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.script.DefaultRedisScript;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -24,6 +26,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    private String infoKey;
+    private String tokenKey;
+
     @Override
     public List<Object> getUsers() {
         return userMapper.getUsers();
@@ -32,13 +37,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
     @Override
     public UmsMember login(UmsMember umsMember) {
         try {
-            // 从缓存中验证用户（ 缓存中用户的信息： K=user:userId:password:login，V=UmsMember ）
+            // 从缓存中验证用户（ 缓存中用户的信息： K=user:password:login，V=UmsMember ）
             if (null != redisTemplate){
                 // redis连接成功
                 // 获取用户名和密码
-                String userId = umsMember.getId();
                 String password = umsMember.getPassword();
-                String userInfo = redisTemplate.opsForValue().get("user:" + userId + ":" + password + ":login");
+                String userInfo = redisTemplate.opsForValue().get("user:" + password + ":login");
                 if (StringUtils.isNotBlank(userInfo)) {
                     // 若缓存中有用户的信息
                     UmsMember memberInfo = JSON.parseObject(userInfo, UmsMember.class);
@@ -51,14 +55,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
             List<UmsMember> umsMembers = userMapper.selectList(new EntityWrapper<UmsMember>()
                     .eq("username", umsMember.getUsername()).eq("password", umsMember.getPassword())
             );
-            System.out.println("****** umsMembers: " + umsMembers);
-            if (null != umsMembers) {
+            System.out.println("****** umsMembers: " + umsMembers + umsMembers.size());
+            if (null != umsMembers && umsMembers.size() > 0) {
                 // 若数据库有该用户则更新到缓存中
                 String password = umsMembers.get(0).getPassword();
-                String userId = umsMembers.get(0).getId();
                 UmsMember memberInfo = umsMembers.get(0);
                 String V = JSON.toJSONString(memberInfo);
-                redisTemplate.opsForValue().set("user:"+userId+":"+password+":login",V,1, TimeUnit.DAYS);
+                this.infoKey = "user:" + password + ":login";
+                redisTemplate.opsForValue().set("user:" + password + ":login",V,1, TimeUnit.DAYS);
                 System.out.println("****** memberInfo444 = " + memberInfo);
 
                 return memberInfo;
@@ -74,6 +78,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
     public Boolean addRedis(String token, String userId) {
         try {
             if (StringUtils.isNotBlank(token) && null != redisTemplate) {
+                this.tokenKey = "user:" + userId + ":token";
                 redisTemplate.opsForValue().set("user:" + userId + ":token", token, 1, TimeUnit.DAYS);
                 return true;
             }
@@ -95,16 +100,34 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UmsMember> implemen
                 script.setScriptText(lua);
                 List<String> keys = new ArrayList<>();
                 keys.add("trade:" + userId + ":code");
-                if (null == redisTemplate) return false;
+                if (null == redisTemplate) {
+                    return false;
+                }
                 Long execute = redisTemplate.execute(script, keys, tradeCode);
                 if (null != execute && execute != 0) {
                     return true;
                 }
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             System.out.println("****** e = " + e.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public boolean logOut(HttpServletRequest request, HttpServletResponse response) {
+        boolean logStatus = false;
+        try {
+            if (null != redisTemplate) {
+                redisTemplate.delete(this.infoKey);
+                redisTemplate.delete(this.tokenKey);
+                logStatus = true;
+            }
+        }catch (Exception e) {
+            System.out.println("****** e = " + e.getMessage());
+        }
+
+        return logStatus;
     }
 
 }

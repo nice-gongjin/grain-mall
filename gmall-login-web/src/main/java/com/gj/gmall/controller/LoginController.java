@@ -16,6 +16,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+/**
+ * @author gj
+ *  登录模块我放到auth-center模块中了，后面可能会调整到这个模块中
+ */
 @RestController
 @RequestMapping("/login")
 public class LoginController {

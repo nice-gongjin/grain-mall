@@ -23,13 +23,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * @author gongjin
+ *  对购物车列表界面中商品的数量及选中状态的修改
+ *      添加商品到购物车时：用户登录就同步到数据库的购物车中，未登录就添加到cookie中
+ *      跳转到购物车界面时需要获取列表数据：用户登录就从缓存中获取数据，未登录就从cookie中获取数据
+ */
 @RestController
 @RequestMapping("/cart")
 public class CartController {
 
     @Reference
     private SkuinfoService skuinfoService;
-
     @Reference
     private CartService cartService;
 
@@ -82,12 +87,12 @@ public class CartController {
                     // cookie中不存在skuId的商品
                     cartItemList.add(omsCartItem);
                 }
-                // 更新cookie，覆盖cookie之前的值
-                CookieUtil.setCookie(request, response, "cartListCookie", JSON.toJSONString(cartItemList), 60 * 60 * 72, true);
             }
+            // 更新cookie，覆盖cookie之前的值
+            CookieUtil.setCookie(request, response, "cartListCookie", JSON.toJSONString(cartItemList), 60 * 60 * 72, true);
         }else {
-            // 用户登录则奖购物车的信息omsCartItem保存到数据库和缓存中
-            // 从数据库的购物车OmsCartItem表中出现数据
+            // 用户登录则将购物车的信息omsCartItem保存到数据库和缓存中
+            // 从数据库的购物车OmsCartItem表中查询数据
             OmsCartItem cartItems = cartService.selectByCart(memberId, skuId);
             System.out.println("****** cartItem = " + JSON.toJSONString(cartItems));
             if (cartItems == null){
@@ -95,16 +100,21 @@ public class CartController {
                 omsCartItem.setMemberId(memberId);
                 omsCartItem.setMemberNickname("test");
                 omsCartItem.setQuantity(quantity);
-                if(StringUtils.isBlank(omsCartItem.getMemberId())) return "请先登录！";
-                else cartService.insert(omsCartItem);
+                if(StringUtils.isBlank(omsCartItem.getMemberId())) {
+                    return "请先登录！";
+                } else {
+                    cartService.insert(omsCartItem);
+                }
             }else {
                 // 该用户memberId添加过商品到购物车
                 cartItems.setQuantity(omsCartItem.getQuantity());
                 cartService.update(cartItems,new EntityWrapper<OmsCartItem>().eq("id",omsCartItem.getId()));
             }
-            // 该用户memberId添加过商品到购物车
+            // 刷新缓存
             Boolean flushCache = cartService.flushCache(memberId);
-            if (!flushCache) return "failed";
+            if (!flushCache) {
+                return "failed";
+            }
         }
 
         return "redirect:/success.html";

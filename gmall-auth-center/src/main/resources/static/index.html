@@ -35,7 +35,7 @@
  
 				<div class="si_bom1 tab" style="display: block;">
 					<div  class="error">
-						请输入账户名和密码
+						请输入账户名和密码！
 					</div>
 
 					<form id="loginForm" action="./login" method="post">
@@ -85,7 +85,7 @@
 		var err_img1=document.getElementsByClassName('err_img1')[0];
 		var err_img2=document.getElementsByClassName('err_img2')[0];
 
-		// 提交道路表单
+		// 提交登录表单
 		function submitLogin() {
 
 			if (user.value == '' || pass.value == '') {
@@ -110,9 +110,7 @@
 					if (token !== "fail") {
 						var returnUrl = $("#ReturnUrl").val();
 						console.log(666, returnUrl, token);
-						return;
 						if (returnUrl == '' || returnUrl == "http://auth.gmall.com:10086/index.html") {
-							console.log(1888);
 							window.location.href = "http://list.gmall.com:10022/index.html?token=" + token;
 						} else {
 							window.location.href = $("#ReturnUrl").val() + "?token=" + token;
@@ -120,6 +118,7 @@
 					} else {
 						// 这里登录验证失败 dosomething
 						err.style.display = 'block';
+						err.value = "账户名或密码错误！";
 						user.style.border = '1px solid red';
 						pass.style.border = '1px solid red';
 					}
@@ -144,19 +143,21 @@
 		user.onblur=function(){
 			if (user.value == '') {
 				err_img1.src = 'img/img11.png';
+				user.style.border='1px solid red';
 			} else {
 				err_img1.src = 'img/grow1.png';
+				user.style.border='1px solid green';
 			}
-			user.style.border='1px solid green';
 		};
 
 		pass.onblur=function(){
 			if (pass.value == '') {
 				err_img2.src = 'img/img22.png';
+				pass.style.border='1px solid red';
 			} else {
 				err_img2.src = 'img/grow2.png';
+				pass.style.border='1px solid green';
 			}
-			pass.style.border='1px solid green';
 		}
 
 	</script>

@@ -25,8 +25,14 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.SimpleFormatter;
 
+/**
+ * @author gongjin
+ *  订单的提交以及订单的列表查询接口
+ *      1、订单提交时：当从购物车界面点击提交订单按钮跳转到订单界面时会生成一个界面码以防止订单重复提交
+ */
 @RestController
 @RequestMapping("/order")
 public class OrderController {
@@ -80,7 +86,9 @@ public class OrderController {
         // modelMap.put("userAddressList", userAddressList);
         modelMap.put("orderDetailList", orderDetailList);
         modelMap.put("totalAmount", totalAmount);
-        if (!addTradeCode) tradeCode = "";
+        if (!addTradeCode) {
+            tradeCode = "";
+        }
         modelMap.put("tradeCode", tradeCode);
         try {
             response.sendRedirect("http://order.gmall.com:10015/trade.html");
@@ -95,6 +103,7 @@ public class OrderController {
     /**
      * 提交订单
      */
+    @LoginRequied(loginSuccess = true)
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     public String submitOrder(@RequestBody String requests, HttpServletRequest request, HttpServletResponse response, ModelMap modelMap){
         String result = "fail";
@@ -105,7 +114,7 @@ public class OrderController {
         try {
             String reqParams = URLDecoder.decode(requests, "utf-8");
             // 将参数requests转为Map类型
-            Map<String, Object> requestMap = new HashMap<>();
+            ConcurrentHashMap<String, Object> requestMap = new ConcurrentHashMap<>();
             String[] split = reqParams.split("&");
             if (split.length > 0) {
                 for (String s : split) {
@@ -114,8 +123,11 @@ public class OrderController {
                         // 只要key不为null即可
                         if (null != strings[0]) {
                             // 存在只有key而没有value的情况
-                            if (strings.length > 1) requestMap.put(strings[0], strings[1]);
-                            else requestMap.put(strings[0], "");
+                            if (strings.length > 1) {
+                                requestMap.put(strings[0], strings[1]);
+                            } else {
+                                requestMap.put(strings[0], "");
+                            }
                         }
                     }
                 }
@@ -137,8 +149,11 @@ public class OrderController {
             omsOrder.setMemberId(userId);
             omsOrder.setMemberUsername((String) request.getAttribute("nickName"));
             String orderNote = (String) requestMap.get("orderComment");
-            if (StringUtils.isNotBlank(orderNote)) omsOrder.setNote(orderNote);
-            else omsOrder.setNote("订单备注");
+            if (StringUtils.isNotBlank(orderNote)) {
+                omsOrder.setNote(orderNote);
+            } else {
+                omsOrder.setNote("订单备注");
+            }
             // 封装订单编号
             String orderSn = "gmall";
             orderSn = orderSn + System.currentTimeMillis();
@@ -173,10 +188,14 @@ public class OrderController {
                 if ("1".equals(cartList.getIsChecked())) {
                     // 检验价格，正式环境应该写在SkuinfoService中，这样可以避免在OrderServiceImpl中调用SkuinfoMapper
                     Boolean cheackPrice = orderService.cheackPrice(cartList);
-                    if (!cheackPrice) return result;
+                    if (!cheackPrice) {
+                        return result;
+                    }
                     // 检验库存
                     Integer stock = orderService.cheackStock(cartList.getProductSkuId());
-                    if (stock <= 0) return result;
+                    if (stock <= 0) {
+                        return result;
+                    }
                     // 3.将购物车的对象封装为订单对象
                     OmsOrderItem orderItem = new OmsOrderItem();
                     orderItem.setProductSkuId(cartList.getProductSkuId());
@@ -194,10 +213,14 @@ public class OrderController {
                     omsOrderItems.add(orderItem);
                     // 4.将订单信息写入数据库
                     Boolean saveOrders = orderService.saveOrders(omsOrder);
-                    if (!saveOrders) return result;
+                    if (!saveOrders) {
+                        return result;
+                    }
                     // 5.删除购物车对应的商品数据
                     boolean delete = cartService.deleteById(cartList.getProductId());
-                    if (!delete) return result;
+                    if (!delete) {
+                        return result;
+                    }
                     // 6.重定向到支付系统，等待用户完成付款的步骤
                     try {
                         response.sendRedirect("http://payment.gmall.com:18888/index.html");

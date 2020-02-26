@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @Component
 public class AuthorityFilter extends HandlerInterceptorAdapter {
@@ -31,8 +32,6 @@ public class AuthorityFilter extends HandlerInterceptorAdapter {
             return true;
         } else {
             // methodAnnotation不为空表示需要对请求进行拦截
-            String userId = "1";
-            // token
             String token = null;
             // 从cookie把token取出来进行解析
             String oldToken = CookieUtil.getCookieValue(request, "token", false);
@@ -48,14 +47,14 @@ public class AuthorityFilter extends HandlerInterceptorAdapter {
             boolean loginSuccess = methodAnnotation.loginSuccess();
             // 调用认证中心进行验证
             String result = null;
-            Map<String, String> successMap = new HashMap<>();
-            if (StringUtils.isNotBlank(token)){
+            ConcurrentHashMap<String, String> successMap = new ConcurrentHashMap<>();
+            if (StringUtils.isNotBlank(token)) {
                 // 调用验证方法
                 String realIP = null;
                 String xff = request.getHeader("x-forwarded-for");
                 if (StringUtils.isNotBlank(xff)) {
                     realIP = xff;
-                }else {
+                } else {
                     realIP = request.getRemoteAddr();
                 }
                 if (StringUtils.isBlank(realIP)) {
@@ -66,21 +65,22 @@ public class AuthorityFilter extends HandlerInterceptorAdapter {
                         doGet("Http://auth.gmall.com:10022/auth/verify?token=" + token + "&currentIP=" + realIP);
                 // 将successJson转化为Map
                 if (StringUtils.isNotBlank(successJson)) {
-                    successMap = JSON.parseObject(successJson, Map.class);
+                    successMap = JSON.parseObject(successJson, ConcurrentHashMap.class);
                     result = successMap.get("status");
                 }
             }
-            if (loginSuccess){
+            if (loginSuccess) {
                 // 需要用户登录
-                if(StringUtils.isNotBlank(result) && result.equals("success")){
+                if(StringUtils.isNotBlank(result) && "success".equals(result)){
                     // 验证通过，将token覆盖，并将token携带的用户信息写回
                     request.setAttribute("userId", successMap.get("memberId"));
                     request.setAttribute("nickname", successMap.get("nickname"));
                     // 验证通过，覆盖cookie中的token
-                    if (StringUtils.isNotBlank(token)){
-                        CookieUtil.setCookie(request,response,"oldToken",token,24*60*60,true);
+                    if (StringUtils.isNotBlank(token)) {
+                        /*CookieUtil.setCookie(request,response,"oldToken",token,24*60*60,true);*/
+                        CookieUtil.setCookie(request,response,"token",token,24*60*60,true);
                     }
-                }else{
+                } else {
                     // 重定向到登录界面
 //                    response.sendRedirect("Http://auth.gmall.com:10022/auth/index?Return=" + request.getRequestURL());
                     response.sendRedirect("http://auth.gmall.com:10022/search/index?Return=" + request.getRequestURL());
@@ -88,12 +88,13 @@ public class AuthorityFilter extends HandlerInterceptorAdapter {
                 }
             } else {
                 // 不需要用户登录，但是必须验证
-                if ("success".equals(result)){
+                if ("success".equals(result)) {
                     request.setAttribute("userId", successMap.get("memberId"));
                     request.setAttribute("nickname", successMap.get("nickname"));
                     // 验证通过，覆盖cookie中的token
-                    if (StringUtils.isNotBlank(token)){
-                        CookieUtil.setCookie(request,response,"oldToken",token,24*60*60,true);
+                    if (StringUtils.isNotBlank(token)) {
+                        /*CookieUtil.setCookie(request,response,"oldToken",token,24*60*60,true);*/
+                        CookieUtil.setCookie(request,response,"token",token,24*60*60,true);
                     }
                 }
             }
