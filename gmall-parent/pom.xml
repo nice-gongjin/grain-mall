@@ -47,7 +47,7 @@
         <guava.version>18.0</guava.version>
         <swagger2.version>2.9.2</swagger2.version>
         <swaggerui.version>2.9.2</swaggerui.version>
-        <poi.version>4.0.1</poi.version>
+        <poi.version>4.1.1</poi.version>
         <commonsio.version>2.6</commonsio.version>
         <fileupload.version>1.3.3</fileupload.version>
         <weixinmp.version>3.3.0</weixinmp.version>
